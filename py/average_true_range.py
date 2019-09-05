@@ -1,10 +1,10 @@
 import numpy as np
 
-def average_true_range(df, n=14):
+def average_true_range(high, low, close, n=14):
 
-    high = np.array(df['high'])
-    low = np.array(df['low'])
-    close = np.array(df['close'])
+    high = np.array(high)
+    low = np.array(low)
+    close = np.array(close)
 
     cs = np.insert(close[1:], 0, None)
 
