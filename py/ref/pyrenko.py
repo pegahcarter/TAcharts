@@ -30,7 +30,8 @@ class renko:
         # When we have some gap in prices
         if gap_div != 0:
             # Forward any direction (up or down)
-            if (gap_div > 0 and (self.renko_directions[-1] > 0 or self.renko_directions[-1] == 0)) or (gap_div < 0 and (self.renko_directions[-1] < 0 or self.renko_directions[-1] == 0)):
+            if (gap_div > 0 and (self.renko_directions[-1] > 0 or self.renko_directions[-1] == 0)) \
+            or (gap_div < 0 and (self.renko_directions[-1] < 0 or self.renko_directions[-1] == 0)):
                 num_new_bars = gap_div
                 is_new_brick = True
                 start_brick = 0
