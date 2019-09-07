@@ -2,24 +2,47 @@ import pandas as pd
 import numpy as np
 import time
 from datetime import datetime, timedelta
-from renko.py.average_true_range import average_true_range
+from py.utils import *
 
 
 class Renko:
-    def __init__(self, FILEPATH, atr_period):
+    def __init__(self, FILEPATH='../data/15min.csv'):
         self.df = pd.read_csv(FILEPATH)
-        self.renko_prices = []
-        self.source_prices = []
-        self.renko_directions = []
+        self.close = iter(self.df['Close'])
+        self.renko = {
+            'prices': [next(self.close)],
+            'directions': [0]
+        }
 
 
-    def _optimize_brick_size(self, atr_period):
-        atr = average_true_range(self.df['high'], self.df['low'], self.df['close'], atr_period)
-        brick_size = atr.median()
+    def set_brick_size(self, brick_size=None, atr_period=14):
+        ''' Setting brick size '''
+        if len(self.df) < atr_period:
+            raise ValueError('ATR period is longer than historical data.')
+
+        self.brick_size = self._optimize_brick_size(brick_size, atr_period)
+
+
+    def _optimize_brick_size(self, brick_size, atr_period):
+        ''' Helper function to get optimal brick size based on ATR '''
+        if not brick_size:
+            atr = average_true_range(self.df['High'], self.df['Low'], self.df['Close'], atr_period)
+            brick_size = atr.median()
+
         return brick_size
 
 
-    def set_brick_size(self, atr_period, brick_size=10):
-        if brick_size != 10:
-            brick_size = self._optimize_brick_size(atr_period)
-        self.brick_size = brick_size
+    def build(self):
+        ''' Create Renko data '''
+        for price in self.close[1:]:
+            self._apply_renko(price)
+
+        return self.renko
+
+
+    def _apply_renko(self, price):
+        pass
+
+
+    def __repr__(self):
+        return f"{self.renko}"
