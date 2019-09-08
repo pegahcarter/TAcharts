@@ -6,8 +6,8 @@ import matplotlib.patches as patches
 
 
 class Renko:
-    def __init__(self, FILEPATH='../data/15min.csv'):
-        self.df = pd.read_csv(FILEPATH)[:250]
+    def __init__(self, FILEPATH):
+        self.df = pd.read_csv(FILEPATH)
         self.close = iter(self.df['Close'])
         self.renko = {
             'prices': [next(self.close)],
@@ -35,8 +35,7 @@ class Renko:
 
     def build(self):
         ''' Create Renko data '''
-        [self._apply_renko(price) for price in self.close]
-        return
+        return [self._apply_renko(price) for price in self.close]
 
 
     def _apply_renko(self, price):
@@ -101,4 +100,4 @@ class Renko:
 
 
     def __repr__(self):
-        return self.renko
+        return f'{self.renko}'
