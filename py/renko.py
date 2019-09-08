@@ -21,6 +21,7 @@ class Renko:
             raise ValueError('ATR period is longer than historical data.')
 
         self.brick_size = self._optimize_brick_size(brick_size, atr_period)
+        return self.brick_size
 
 
     def _optimize_brick_size(self, brick_size, atr_period):
@@ -34,14 +35,37 @@ class Renko:
 
     def build(self):
         ''' Create Renko data '''
-        for price in self.close[1:]:
+        while self.close:
+            price = next(self.close)
             self._apply_renko(price)
 
         return self.renko
 
 
     def _apply_renko(self, price):
-        pass
+        ''' Determine if there are any new bricks to paint with current price '''
+        num_bricks = 0
+        gap = (price - self.renko.prices[-1]) // self.brick_size
+        # No gap means there's not a new brick
+        if gap == 0:
+            return
+        # Add brick(s) in the same direction
+        if (gap > 0 and self.renko.directions[-1] >= 0) \
+        or (gap < 0 and self.renko.directions[-1] <= 0):
+            num_bricks = gap
+        # Gap >= 2 or -2 and opposite renko direction means we're switching brick direction
+        elif abs(gap) >= 2:
+            num_bricks = gap - np.sign(gap)
+            self._update_renko(gap, 2)
+
+        return [self._update_renko(gap) for brick in range(num_bricks)]
+
+
+    def _update_renko(self, gap, brick_multiplier=1):
+        ''' Append price and new block to renko dict '''
+        renko_price = self.renko.prices[-1] + brick_multiplier*self.brick_size*np.sign(gap)
+        self.renko.prices.append(renko_price)
+        self.renko.directions.append(np.sign(gap))
 
 
     def __repr__(self):
