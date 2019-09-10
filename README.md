@@ -1,9 +1,12 @@
-# Renko Indicator
+# TA-charts
 
-This repository models price movement using a Renko chart.  Renko charts consist of bricks instead of candles, more clearly show market trends, and reduce the noise present on normal candlestick charts.
+This repository models price movement using several TA chart techniques:
+* Ichimoku
+* Bollinger Bands
+* Renko
 
 ### How it works
-
+#### Renko Chart
 ```python
 from py.renko import Renko
 
@@ -14,12 +17,5 @@ renko.build()
 
 renko.plot()
 ```
-
-
 ![png](renko.png)
 
-
-
-#### References
-* [pyrenko](https://github.com/quantroom-pro/pyrenko)
-* [ta-lib](https://github.com/mrjbq7/ta-lib)
