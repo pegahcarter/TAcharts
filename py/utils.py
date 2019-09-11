@@ -1,6 +1,11 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+from matplotlib import colors as mcolors
+from matplotlib.lines import Line2D
+from matplotlib.patches import Rectangle
+from matplotlib.dates import date2num
+
 
 
 def group_candles(df, period):
@@ -34,13 +39,43 @@ def average_true_range(high, low, close, n=14):
     return atr
 
 
-def ma(close, period):
-    pass
+def draw_candlesticks(ax, df):
 
+    df = df[['date', 'open', 'high', 'low', 'close']]
+    lines = []
+    patches = []
 
-def ema(close, period):
-    pass
+    for i, (date, _open, high, low, close) in df.iterrows():
+        date = date2num(date)
+        if close >= _open:
+            color = 'g'
+            lower = _open
+            height = close - _open
+        else:
+            color = 'r'
+            lower = close
+            height = _open - close
 
+        vline = Line2D(
+            xdata=(date, date), ydata=(low, high),
+            color=color,
+            linewidth=0.5,
+            antialiased=True
+        )
 
-def macd(close, slow_period, fast_period):
-    pass
+        rect = Rectangle(
+            xy=(date - .4, lower),
+            width=0.8,
+            height=height,
+            facecolor=color,
+            edgecolor=color,
+            alpha=1.0
+        )
+
+        lines.append(vline)
+        ax.add_line(vline)
+        patches.append(rect)
+        ax.add_patch(rect)
+
+    ax.autoscale_view()
+    return lines, patches
