@@ -41,7 +41,7 @@ def average_true_range(high, low, close, n=14):
 
 def draw_candlesticks(ax, df):
 
-    df = df[['date', 'open', 'high', 'low', 'close']]
+    df = df[['date', 'open', 'high', 'low', 'close']].dropna()
     lines = []
     patches = []
 

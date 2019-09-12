@@ -19,7 +19,14 @@ class Bollinger:
         self.n = n
         self.ndev = ndev
 
+        self._validate_data()
         self._apply_bollinger()
+
+
+    def _validate_data(self):
+        ''' Make sure we have more rows of data than the rolling average size '''
+        if self.n > len(self.df):
+            raise AssertionError('Moving average cannot be larger than number of records.')
 
 
     def _apply_bollinger(self):
@@ -51,3 +58,10 @@ class Bollinger:
         plt.legend(['{}MA'.format(self.n)])
 
         return plt.show()
+
+
+df = pd.read_csv('data/15min.csv')[:10000]
+b = Bollinger(df, period=96)
+b.build()
+
+b.plot()
