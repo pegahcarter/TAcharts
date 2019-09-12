@@ -1,33 +1,33 @@
+from utils import *
 import pandas as pd
 import numpy as np
-from py.utils import *
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 
 class Renko:
-    def __init__(self, FILEPATH):
-        self.df = pd.read_csv(FILEPATH)
-        self.close = iter(self.df['Close'])
+    def __init__(self, df):
+        self.df = df.copy()
+        self.close = iter(self.df['close'])
         self.renko = {
             'prices': [next(self.close)],
             'directions': [0]
         }
 
 
-    def set_brick_size(self, brick_size=None, atr_period=14):
+    def set_brick_size(self, auto=True, brick_size=None, atr_period=14):
         ''' Setting brick size '''
         if len(self.df) < atr_period:
             raise ValueError('ATR period is longer than historical data.')
 
-        self.brick_size = self._optimize_brick_size(brick_size, atr_period)
+        self.brick_size = self._optimize_brick_size(auto, brick_size, atr_period)
         return self.brick_size
 
 
-    def _optimize_brick_size(self, brick_size, atr_period):
+    def _optimize_brick_size(self, auto, brick_size, atr_period):
         ''' Helper function to get optimal brick size based on ATR '''
-        if not brick_size:
-            atr = average_true_range(self.df['High'], self.df['Low'], self.df['Close'], atr_period)
+        if auto:
+            atr = average_true_range(self.df['high'], self.df['low'], self.df['close'], atr_period)
             brick_size = np.median(atr)
 
         return brick_size
@@ -70,8 +70,11 @@ class Renko:
 
     def plot(self):
         fig, ax = plt.subplots(1, figsize=(20,10))
-        ax.set_title("Renko Chart (brick size = {})".format(round(self.brick_size, 2)))
-        ax.set_ylabel('Price')
+
+        fig.suptitle("Renko Chart (brick size = {})".format(round(self.brick_size, 2)), fontsize=20)
+        ax.set_ylabel('Price ($)')
+        plt.rc('axes', labelsize=20)
+        plt.rc('font', size=16)
 
         # Calculate range for axis
         ax.set_xlim(0, len(self.renko['prices'])+1)
@@ -97,7 +100,3 @@ class Renko:
             )
 
         return plt.show()
-
-
-    def __repr__(self):
-        return f'{self.renko}'

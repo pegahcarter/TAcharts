@@ -1,4 +1,4 @@
-from TAcharts.py.utils import *
+from utils import *
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -9,11 +9,10 @@ pd.plotting.register_matplotlib_converters()
 
 class Ichimoku:
     def __init__(self, df, period=None):
+        self.df = df.copy()
         if period:
-            df = group_candles(df, period)
-        df['date'] = df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
-
-        self.df = df
+            self.df = group_candles(self.df, period)
+        self.df['date'] = self.df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
         self.ichimoku = {}
 
 
@@ -83,12 +82,13 @@ class Ichimoku:
 
         draw_candlesticks(ax, self.df)
 
-        ax.set(ylabel='BTC price ($)', title='Ichimoku')
+        fig.suptitle('Ichimoku', fontsize=30)
+        plt.ylabel('BTC price ($)')
         plt.rc('axes', labelsize=20)
-        plt.rc('font', size=16)
+        plt.rc('font', size=18)
 
         ax.xaxis.set_major_locator(mdates.MonthLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m/%y'))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%y'))
         plt.xticks(rotation=45)
 
         plt.fill_between(
@@ -104,9 +104,3 @@ class Ichimoku:
             interpolate=True
         )
         return plt.show()
-
-
-df = pd.read_csv('data/15min.csv')
-ichi = Ichimoku(df, period=96)
-ichi.build(20, 60, 120, 30)
-ichi.plot()

@@ -1,4 +1,4 @@
-from TAcharts.py.utils import *
+from utils import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,10 +8,10 @@ pd.plotting.register_matplotlib_converters()
 
 class Bollinger:
     def __init__(self, df, period=None):
+        self.df = df.copy()
         if period:
-            df = group_candles(df, period)
-        df['date'] = df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
-        self.df = df
+            self.df = group_candles(self.df, period)
+        self.df['date'] = self.df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
         self.bollinger = {}
 
 
@@ -48,20 +48,14 @@ class Bollinger:
         draw_candlesticks(ax, self.df)
 
         plt.rc('axes', labelsize=20)
-        plt.rc('font', size=16)
+        plt.rc('font', size=18)
 
-        ax.xaxis.set_major_locator(mdates.WeekdayLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%y'))
+        ax.xaxis.set_major_locator(mdates.MonthLocator())
         plt.xticks(rotation=45)
 
-        ax.set(ylabel='Price ($)', title='Bollinger Bands')
+        fig.suptitle('Bollinger Bands', fontsize=30)
+        plt.ylabel('BTC price ($)')
         plt.legend(['{}MA'.format(self.n)])
 
         return plt.show()
-
-
-df = pd.read_csv('data/15min.csv')[:10000]
-b = Bollinger(df, period=96)
-b.build()
-
-b.plot()
