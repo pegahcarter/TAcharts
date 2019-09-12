@@ -23,7 +23,7 @@ b = Bollinger(df)
 b.build(n=20)
 b.plot()
 ```
-![png](img/bollinger.png)
+![png](img/bollinger.PNG)
 
 #### Ichimoku
 ```python
@@ -34,7 +34,7 @@ i.build(20, 60, 120, 30)
 
 i.plot()
 ```
-![png](img/ichimoku.png)
+![png](img/ichimoku.PNG)
 
 
 #### Renko
@@ -47,4 +47,4 @@ renko.build()
 
 renko.plot()
 ```
-![png](img/renko.png)
+![png](img/renko.PNG)
