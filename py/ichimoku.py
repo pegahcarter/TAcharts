@@ -2,22 +2,18 @@ from TAcharts.py.utils import *
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-import time
-import os
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 pd.plotting.register_matplotlib_converters()
 
 
 class Ichimoku:
-    def __init__(self, FILE='data/15min.csv', period=None):
-        self.df = pd.read_csv(FILE)
+    def __init__(self, df, period=None):
         if period:
-            self.df = group_candles(self.df, period)
-        # self.date = [datetime.strptime(x, '%Y-%m-%d %H:%M:%S') for x in self.df['date']]
-        # self.date = self.df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+            df = group_candles(df, period)
+        df['date'] = df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
 
-        self.df['price'] = self.df['close'].shift(1)
+        self.df = df
         self.ichimoku = {}
 
 
@@ -38,7 +34,8 @@ class Ichimoku:
 
 
     def _extend_dates(self, displacement):
-        last_date = datetime.strptime(self.df['date'].iat[-1], '%Y-%m-%d %H:%M:%S')
+        # last_date = datetime.strptime(self.df['date'].iat[-1], '%Y-%m-%d %H:%M:%S')
+        last_date = self.df['date'].iat[-1]
         new_dates = [last_date + timedelta(days=i+1) for i in range(displacement)]
         self.df = self.df.append({'date': new_dates}, ignore_index=True, sort=False)
         return
@@ -53,7 +50,7 @@ class Ichimoku:
 
 
     def _build_spans(self, senkou_b_period, displacement):
-        self.ichimoku['chikou'] = self.df['price'].shift(-displacement)
+        self.ichimoku['chikou'] = self.df['close'].shift(-displacement)
         self.ichimoku['senkou_a'] = (self.ichimoku['tenkan'] + self.ichimoku['kijun']) / 2
 
         self._build_lines(senkou_b=senkou_b_period)
@@ -67,11 +64,13 @@ class Ichimoku:
         fig, ax = plt.subplots(figsize=(20,10))
 
         x = self.df['date']
-        plt.plot(x, self.ichimoku['tenkan'], color='blue')
-        plt.plot(x, self.ichimoku['kijun'], color='maroon')
-        plt.plot(x, self.df['price'], color='black', linewidth=1)
-        plt.plot(x, self.ichimoku['senkou_a'], color='green', linewidth=0.5)
-        plt.plot(x, self.ichimoku['senkou_b'], color='red', linewidth=0.5)
+        # plt.plot(x, self.ichimoku['tenkan'], color='blue')
+        # plt.plot(x, self.ichimoku['kijun'], color='maroon')
+        plt.plot(x, self.df['close'], color='black', linewidth=1)
+        # plt.plot(x, self.ichimoku['senkou_a'], color='green', linewidth=0.5)
+        # plt.plot(x, self.ichimoku['senkou_b'], color='red', linewidth=0.5)
+
+        # draw_candlesticks(ax, self.df)
 
         ax.set(xlabel='Month (2019)', ylabel='BTC price ($)')
         plt.rc('axes', labelsize=20)
@@ -81,23 +80,24 @@ class Ichimoku:
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
         plt.xticks(rotation=45)
 
-        plt.fill_between(
-            x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
-            where=self.ichimoku['senkou_a'] >= self.ichimoku['senkou_b'],
-            facecolor='limegreen',
-            interpolate=True
-        )
-        plt.fill_between(
-            x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
-            where=self.ichimoku['senkou_a'] <= self.ichimoku['senkou_b'],
-            facecolor='salmon',
-            interpolate=True
-        )
+        # plt.fill_between(
+        #     x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
+        #     where=self.ichimoku['senkou_a'] >= self.ichimoku['senkou_b'],
+        #     facecolor='limegreen',
+        #     interpolate=True
+        # )
+        # plt.fill_between(
+        #     x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
+        #     where=self.ichimoku['senkou_a'] <= self.ichimoku['senkou_b'],
+        #     facecolor='salmon',
+        #     interpolate=True
+        # )
         return plt.show()
 
 
-ichi = Ichimoku(period=96)
-ichi.build(20, 60, 120, 30)
+df = pd.read_csv('data/15min.csv')[:4000]
+ichi = Ichimoku(df, period=96)
 
+ichi.build(20, 60, 120, 30)
 
 ichi.plot()
