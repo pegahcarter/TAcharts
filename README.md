@@ -5,6 +5,7 @@ This repository models price movement using several TA chart techniques:
 * Bollinger Bands
 * Renko
 
+
 ### How it works
 
 ```python
@@ -41,10 +42,10 @@ i.plot()
 ```python
 from renko import Renko
 
-renko = Renko(df)
-renko.set_brick_size(auto=True, atr_period=14)
-renko.build()
+r = Renko(df)
+r.set_brick_size(auto=True, atr_period=14)
+r.build()
 
-renko.plot()
+r.plot()
 ```
 ![png](img/renko.PNG)
