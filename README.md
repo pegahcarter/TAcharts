@@ -6,16 +6,45 @@ This repository models price movement using several TA chart techniques:
 * Renko
 
 ### How it works
-#### Renko Chart
-```python
-from py.renko import Renko
 
-# NOTE: File should be a CSV of candlestick data that contains columns 'High', 'Low', and 'Close' 
-renko = Renko(<FILEPATH>)
-renko.set_brick_size()
+```python
+import pandas as pd
+%matplotlib inline
+
+# NOTE: File should contain the columns 'date', 'open', 'high', 'low', and 'close'
+df = pd.read_csv('../Daily.csv')
+```
+
+#### Bollinger Bands
+```python
+from bollinger import Bollinger
+
+b = Bollinger(df)
+b.build(n=20)
+b.plot()
+```
+![png](img/bollinger.png)
+
+#### Ichimoku
+```python
+from ichimoku import Ichimoku
+
+i = Ichimoku(df)
+i.build(20, 60, 120, 30)
+
+i.plot()
+```
+![png](img/ichimoku.png)
+
+
+#### Renko
+```python
+from renko import Renko
+
+renko = Renko(df)
+renko.set_brick_size(auto=True, atr_period=14)
 renko.build()
 
 renko.plot()
 ```
-![png](renko.png)
-
+![png](img/renko.png)
