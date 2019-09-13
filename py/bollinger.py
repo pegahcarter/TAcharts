@@ -30,11 +30,11 @@ class Bollinger:
 
 
     def _apply_bollinger(self):
-        self.bollinger['sma'] = self.df['close'].rolling(self.n, min_periods=0).mean()
-        sdev = self.df['close'].rolling(self.n, min_periods=0).std()
+        self.bollinger['sma'] = sma(self.df['close'], window=self.n)
+        rng = self.ndev * sdev(self.df['close'], window=self.n)
 
-        self.bollinger['h_band'] = self.bollinger['sma'] + self.ndev*sdev
-        self.bollinger['l_band'] = self.bollinger['sma'] - self.ndev*sdev
+        self.bollinger['h_band'] = self.bollinger['sma'] + rng
+        self.bollinger['l_band'] = self.bollinger['sma'] - rng
 
 
     def plot(self):

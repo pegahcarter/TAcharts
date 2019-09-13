@@ -79,3 +79,15 @@ def draw_candlesticks(ax, df):
 
     ax.autoscale_view()
     return lines, patches
+
+
+def ema(line, span):
+    return line.ewm(span=span, min_periods=0, adjust=False).mean()
+
+
+def sma(line, window, attribute='mean'):
+    return getattr(line.rolling(window=window, min_periods=0), attribute)()
+
+
+def sdev(line, window):
+    return line.rolling(window=window, min_periods=0).std()
