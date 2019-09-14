@@ -82,12 +82,15 @@ def draw_candlesticks(ax, df):
 
 
 def ema(line, span):
+    line = pd.Series(line)
     return line.ewm(span=span, min_periods=0, adjust=False).mean()
 
 
 def sma(line, window, attribute='mean'):
+    line = pd.Series(line)
     return getattr(line.rolling(window=window, min_periods=0), attribute)()
 
 
 def sdev(line, window):
+    line = pd.Series(line)
     return line.rolling(window=window, min_periods=0).std()
