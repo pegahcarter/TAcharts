@@ -7,7 +7,6 @@ from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
 
 
-
 def group_candles(df, period):
     candles = np.array(df)
     results = []
@@ -24,12 +23,13 @@ def group_candles(df, period):
 
 
 def average_true_range(high, low, close, n=14):
+    ''' Returns the average true range from candlestick data '''
     high = np.array(high)
     low = np.array(low)
     close = np.array(close)
 
     cs = np.insert(close[1:], 0, None)
-    tr = np.amax([cs, high], axis=0) - np.amin([cs, low], axis=0)
+    tr = maxmin('max', cs, high) - maxmin('min', cs, low)
     tr[0] = high[0] - low[0]
 
     atr = np.zeros(len(close))
@@ -39,8 +39,47 @@ def average_true_range(high, low, close, n=14):
     return atr
 
 
-def draw_candlesticks(ax, df):
+def ema(line, span):
+    ''' Returns the exponential moving average for a list'''
+    line = pd.Series(line)
+    return line.ewm(span=span, min_periods=1, adjust=False).mean()
 
+
+def sma(line, window, attribute='mean'):
+    ''' Returns the simple moving average for a list'''
+    line = pd.Series(line)
+    return getattr(line.rolling(window=window, min_periods=1), attribute)()
+
+
+def sdev(line, window):
+    ''' Returns the standard deviation of a list '''
+    line = pd.Series(line)
+    return line.rolling(window=window, min_periods=0).std()
+
+
+def crossover(x1, x2):
+    ''' Find all instances of intersections between two lines '''
+    intersections = {}
+    x1_gt_x2 = list(x1 > x2)
+    current_val = x1_gt_x2[0]
+    for index, val in enumerate(x1_gt_x2[1:]):
+        if val != current_val:
+            intersections[index+1] = val
+        current_val = val
+    return intersections
+
+
+def maxmin(max_or_min, *args):
+    ''' Compare lists and return the max or min value at each index '''
+    if max_or_min == 'max':
+        return np.amax(args, axis=0)
+    elif max_or_min == 'min':
+        return np.amin(args, axis=0)
+    else:
+        raise ValueError('Enter "max" or "min" as max_or_min parameter.')
+
+
+def draw_candlesticks(ax, df):
     df = df[['date', 'open', 'high', 'low', 'close']].dropna()
     lines = []
     patches = []
@@ -79,18 +118,3 @@ def draw_candlesticks(ax, df):
 
     ax.autoscale_view()
     return lines, patches
-
-
-def ema(line, span):
-    line = pd.Series(line)
-    return line.ewm(span=span, min_periods=0, adjust=False).mean()
-
-
-def sma(line, window, attribute='mean'):
-    line = pd.Series(line)
-    return getattr(line.rolling(window=window, min_periods=0), attribute)()
-
-
-def sdev(line, window):
-    line = pd.Series(line)
-    return line.rolling(window=window, min_periods=0).std()
