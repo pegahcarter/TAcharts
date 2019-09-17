@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import itertools
 from datetime import datetime, timedelta
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
@@ -7,19 +8,68 @@ from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
 
 
-def group_candles(df, period):
-    candles = np.array(df)
+def group_candles(df, interval):
+    ''' Combine candles so instead of needing one dataset for each time interval,
+        you can form time intervals using more precise data.
+
+    Example: You have 15-min candlestick data but want to test a strategy based
+        on 1-hour candlestick data  (interval=4).
+    '''
+    columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+    candles = np.array(df[columns])
     results = []
-    for i in range(0, len(df)-period, period):
+    for i in range(0, len(df)-interval, interval):
         results.append([
-            candles[i, 0],                  # date
-            candles[i, 1],                  # open
-            candles[i:i+period, 2].max(),   # high
-            candles[i:i+period, 3].min(),   # low
-            candles[i+period, 4],           # close
-            candles[i:i+period, 5].sum()    # volume
+            candles[i, 0],                      # date
+            candles[i, 1],                      # open
+            candles[i:i+interval, 2].max(),     # high
+            candles[i:i+interval, 3].min(),     # low
+            candles[i+interval, 4],             # close
+            candles[i:i+interval, 5].sum()      # volume
         ])
-    return pd.DataFrame(results, columns=df.columns)
+    return pd.DataFrame(results, columns=columns)
+
+
+def fill_values(averages, interval, target_len):
+    ''' Fill missing values with evenly spaced samples.
+
+    Example: You're using 15-min candlestick data but want to include a 1-hour moving
+        average with a value at every 15-min mark, and not just every 1-hour mark.
+    '''
+    # Combine every two values with the number of intervals between each value
+    avgs_zip = zip(averages[:-1], averages[1:], itertools.repeat(interval), itertools.repeat(False))
+    # Generate evenly-spaced samples between every point
+    avgs_gen = (np.linspace(*x) for x in avgs_zip)
+    # Unpack all values into one list
+    avgs_unpack = list(itertools.chain.from_iterable(avgs_gen))
+    # Extend the list to have as many values as our target dataframe
+    avgs_filled = avgs_unpack.extend([averages[-1]] * (target_len - len(avgs_unpack)))
+    return avgs_filled
+
+
+def ema(line, span):
+    ''' Returns the exponential moving average for a list '''
+    line = pd.Series(line)
+    return line.ewm(span=span, min_periods=1, adjust=False).mean()
+
+
+def sma(line, window, attribute='mean'):
+    ''' Returns the simple moving average for a list '''
+    line = pd.Series(line)
+    return getattr(line.rolling(window=window, min_periods=1), attribute)()
+
+
+def sdev(line, window):
+    ''' Returns the standard deviation of a list '''
+    line = pd.Series(line)
+    return line.rolling(window=window, min_periods=0).std()
+
+
+def macd(close, fast=8, slow=21):
+    ''' Returns the "moving average convergence/divergence" (MACD) '''
+    ema_fast = ema(close, fast)
+    ema_slow = ema(close, slow)
+    return ema_fast - ema_slow
 
 
 def average_true_range(high, low, close, n=14):
@@ -37,30 +87,6 @@ def average_true_range(high, low, close, n=14):
     for i in range(len(atr)):
         atr[i] = (atr[i-1] * (n - 1) + tr[i]) / float(n)
     return atr
-
-
-def ema(line, span):
-    ''' Returns the exponential moving average for a list'''
-    line = pd.Series(line)
-    return line.ewm(span=span, min_periods=1, adjust=False).mean()
-
-
-def sma(line, window, attribute='mean'):
-    ''' Returns the simple moving average for a list'''
-    line = pd.Series(line)
-    return getattr(line.rolling(window=window, min_periods=1), attribute)()
-
-
-def sdev(line, window):
-    ''' Returns the standard deviation of a list '''
-    line = pd.Series(line)
-    return line.rolling(window=window, min_periods=0).std()
-
-
-def macd(close, fast=8, slow=21):
-    ema_fast = ema(close, fast)
-    ema_slow = ema(close, slow)
-    return ema_fast - ema_slow
 
 
 def crossover(x1, x2):
@@ -86,6 +112,7 @@ def maxmin(max_or_min, *args):
 
 
 def draw_candlesticks(ax, df):
+    ''' Add candlestick visuals to a matplotlib graph '''
     df = df[['date', 'open', 'high', 'low', 'close']].dropna()
     lines = []
     patches = []
