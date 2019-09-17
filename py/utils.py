@@ -57,6 +57,12 @@ def sdev(line, window):
     return line.rolling(window=window, min_periods=0).std()
 
 
+def macd(close, fast=8, slow=21):
+    ema_fast = ema(close, fast)
+    ema_slow = ema(close, slow)
+    return ema_fast - ema_slow
+
+
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
     intersections = {}
