@@ -43,8 +43,8 @@ def fill_values(averages, interval, target_len):
     # Unpack all values into one list
     avgs_unpack = list(itertools.chain.from_iterable(avgs_gen))
     # Extend the list to have as many values as our target dataframe
-    avgs_filled = avgs_unpack.extend([averages[-1]] * (target_len - len(avgs_unpack)))
-    return avgs_filled
+    avgs_unpack.extend([averages[-1]] * (target_len - len(avgs_unpack)))
+    return avgs_unpack
 
 
 def ema(line, span):
@@ -72,20 +72,19 @@ def macd(close, fast=8, slow=21):
     return ema_fast - ema_slow
 
 
-def average_true_range(high, low, close, n=14):
+def average_true_range(high, low, close, span=14):
     ''' Returns the average true range from candlestick data '''
     high = np.array(high)
     low = np.array(low)
     close = np.array(close)
+    prev_close = np.insert(close[1:], 0, 0)
 
-    cs = np.insert(close[1:], 0, None)
-    tr = maxmin('max', cs, high) - maxmin('min', cs, low)
-    tr[0] = high[0] - low[0]
-
-    atr = np.zeros(len(close))
-    atr[0] = tr[1:].mean()
-    for i in range(len(atr)):
-        atr[i] = (atr[i-1] * (n - 1) + tr[i]) / float(n)
+    # True range is largest of the following:
+    #   a. Current high - current low
+    #   b. Absolute value of current high - previous close
+    #   c. Absolute value of current low - previous close
+    true_range = maxmin('max', high - low, abs(high - prev_close), abs(low - prev_close))
+    atr = ema(true_range, span)
     return atr
 
 
