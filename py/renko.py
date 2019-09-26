@@ -17,7 +17,7 @@ class Renko:
         self.close = df['close'].tolist()
 
 
-    def set_brick_size(self, auto=True, brick_size=None, atr_period=14):
+    def set_brick_size(self, brick_size=None, auto=True, atr_period=14):
         ''' Setting brick size '''
         if len(self.close) < atr_period:
             raise ValueError('ATR period is longer than historical data.')
@@ -69,7 +69,7 @@ class Renko:
 
         for brick in range(abs(int(num_bricks))):
             self._update_renko(date, direction)
-            
+
         return self.renko
 
 
