@@ -90,14 +90,28 @@ def average_true_range(high, low, close, span=14):
 
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
-    intersections = {}
+    crossovers = {}
     x1_gt_x2 = list(x1 > x2)
     current_val = x1_gt_x2[0]
     for index, val in enumerate(x1_gt_x2[1:]):
         if val != current_val:
-            intersections[index+1] = val
+            crossovers[index+1] = val
         current_val = val
-    return intersections
+    return crossovers
+
+
+def intersection(a1, a2, b1, b2):
+    ''' Return the intersection coordinates between vector A and vector B '''
+    da = np.subtract(a1, a2)
+    db = np.subtract(b1, b2)
+    dp = np.subtract(a1, b1)
+
+    dap = np.array([-da[1], da[0]])
+
+    denom = dap.dot(db)
+    num = dap.dot(dp)
+
+    return (float(num) / denom)*db + b1
 
 
 def maxmin(max_or_min, *args):
