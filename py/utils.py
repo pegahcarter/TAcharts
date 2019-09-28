@@ -114,6 +114,18 @@ def intersection(a1, a2, b1, b2):
     return (float(num) / denom)*db + b1
 
 
+def area_between(line1, line2):
+    ''' Return the area between line1 and line2 '''
+    diff = np.subtract(line1, line2)
+    x1 = diff[:-1]
+    x2 = diff[1:]
+
+    triangle_area = abs(x2 - x1) * .5
+    square_area = np.amin(zip(x1, x2), axis=1)
+
+    return np.sum([triangle_area, square_area])
+
+
 def maxmin(max_or_min, *args):
     ''' Compare lists and return the max or min value at each index '''
     if max_or_min == 'max':
