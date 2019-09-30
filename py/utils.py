@@ -100,19 +100,18 @@ def crossover(x1, x2):
     return crossovers
 
 
-def intersection(a1, a2, b1, b2):
+def intersection(a0, a1, b0, b1):
     ''' Return the intersection coordinates between vector A and vector B '''
-    da = np.subtract(a1, a2)
-    db = np.subtract(b1, b2)
-    dp = np.subtract(a1, b1)
+    a_diff = a1 - a0
+    b_diff = b1 - b0
 
-    dap = np.array([-da[1], da[0]])
+    pos0_diff = float(a0 - b0)
 
-    denom = dap.dot(db)
-    num = dap.dot(dp)
+    x = pos0_diff / (b_diff - a_diff)
+    y = b_diff*x + b0
 
-    return (float(num) / denom)*db + b1
-
+    return x, y
+    
 
 def area_between(line1, line2):
     ''' Return the area between line1 and line2 '''
