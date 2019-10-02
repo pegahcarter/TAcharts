@@ -8,9 +8,11 @@ import matplotlib.patches as patches
 class Renko:
     def __init__(self, df):
         try:
-            self.date = df['date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).tolist()
+            self.date = pd.to_datetime(df['date'])
         except:
-            self.date = df['date'].tolist()
+            self.date = df['date']
+
+        self.date = self.date.shift(1).tolist()
 
         self.high = df['high'].tolist()
         self.low = df['low'].tolist()
@@ -41,7 +43,8 @@ class Renko:
         start_price = units * self.brick_size
 
         self.renko = {
-            'date': [self.date[0]],
+            'index': [0],
+            'date': [self.date[1]],
             'price': [start_price],
             'direction': [0]
         }
@@ -53,6 +56,7 @@ class Renko:
     def _apply_renko(self, date, price):
         ''' Determine if there are any new bricks to paint with current price '''
         num_bricks = 0
+        index = self.close.index(price) + ``
         gap = (price - self.renko['price'][-1]) // self.brick_size
         direction = np.sign(gap)
         # No gap means there's not a new brick
@@ -65,17 +69,18 @@ class Renko:
         # Gap >= 2 or -2 and opposite renko direction means we're switching brick direction
         elif np.abs(gap) >= 2:
             num_bricks = gap - 2*direction
-            self._update_renko(date, direction, 2)
+            self._update_renko(index, date, direction, 2)
 
         for brick in range(abs(int(num_bricks))):
-            self._update_renko(date, direction)
+            self._update_renko(index, date, direction)
 
         return self.renko
 
 
-    def _update_renko(self, date, direction, brick_multiplier=1):
+    def _update_renko(self, index, date, direction, brick_multiplier=1):
         ''' Append price and new block to renko dict '''
         renko_price = self.renko['price'][-1] + (direction * brick_multiplier * self.brick_size)
+        self.renko['index'].append(index)
         self.renko['date'].append(date)
         self.renko['price'].append(renko_price)
         self.renko['direction'].append(direction)
