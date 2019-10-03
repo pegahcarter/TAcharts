@@ -36,6 +36,8 @@ def fill_values(averages, interval, target_len):
     Example: You're using 15-min candlestick data but want to include a 1-hour moving
         average with a value at every 15-min mark, and not just every 1-hour mark.
     '''
+    if not isinstance(averages, list):
+        averages = list(averages)
     # Combine every two values with the number of intervals between each value
     avgs_zip = zip(averages[:-1], averages[1:], itertools.repeat(interval), itertools.repeat(False))
     # Generate evenly-spaced samples between every point
@@ -72,20 +74,43 @@ def macd(close, fast=8, slow=21):
     return ema_fast - ema_slow
 
 
-def average_true_range(high, low, close, span=14):
+def rsi(close, n=14):
+    deltas = np.diff(close)
+    seed = deltas[:n+1]
+    up = seed[seed > 0].sum()/n
+    down = -seed[seed < 0].sum()/n
+    rsi = np.zeros_like(close)
+    rsi[:n] = 100. - 100./(1.+ up/down)
+    for i in range(n, len(close)):
+        delta = deltas[i-1]
+        if delta > 0:
+            up_val = delta
+            down_val = 0
+        else:
+            up_val = 0
+            down_val = -delta
+
+        up = (up*(n-1) + up_val)/n
+        down = (down*(n-1) + down_val)/n
+
+        rsi[i] = 100. - 100./(1. + up/down)
+
+    return rsi
+
+
+def atr(high, low, close, window=14):
     ''' Returns the average true range from candlestick data '''
     high = np.array(high)
     low = np.array(low)
     close = np.array(close)
-    prev_close = np.insert(close[1:], 0, 0)
+    prev_close = np.insert(close[:-1], 0, 0)
 
     # True range is largest of the following:
     #   a. Current high - current low
     #   b. Absolute value of current high - previous close
     #   c. Absolute value of current low - previous close
     true_range = maxmin('max', high - low, abs(high - prev_close), abs(low - prev_close))
-    atr = ema(true_range, span)
-    return atr
+    return sma(true_range, window)
 
 
 def crossover(x1, x2):
@@ -111,7 +136,7 @@ def intersection(a0, a1, b0, b1):
     y = b_diff*x + b0
 
     return x, y
-    
+
 
 def area_between(line1, line2):
     ''' Return the area between line1 and line2 '''
