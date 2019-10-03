@@ -115,14 +115,11 @@ def atr(high, low, close, window=14):
 
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
-    crossovers = {}
-    x1_gt_x2 = list(x1 > x2)
-    current_val = x1_gt_x2[0]
-    for index, val in enumerate(x1_gt_x2[1:]):
-        if val != current_val:
-            crossovers[index+1] = val
-        current_val = val
-    return crossovers
+    x1_gt_x2 = x1 > x2
+    cross = np.diff(x1_gt_x2)
+    cross = np.insert(cross, 0, False)
+    cross_indices = np.flatnonzero(cross)
+    return cross_indices
 
 
 def intersection(a0, a1, b0, b1):
@@ -200,3 +197,15 @@ def draw_candlesticks(ax, df):
 
     ax.autoscale_view()
     return lines, patches
+
+
+# def crossover(x1, x2):
+#     ''' Find all instances of intersections between two lines '''
+#     crossovers = {}
+#     x1_gt_x2 = list(x1 > x2)
+#     current_val = x1_gt_x2[0]
+#     for index, val in enumerate(x1_gt_x2[1:]):
+#         if val != current_val:
+#             crossovers[index+1] = val
+#         current_val = val
+#     return crossovers
