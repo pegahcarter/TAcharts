@@ -50,15 +50,22 @@ def fill_values(averages, interval, target_len):
 
 
 def ema(line, span):
-    ''' Returns the exponential moving average for a list '''
+    ''' Returns the "exponential moving average" for a list '''
     line = pd.Series(line)
     return line.ewm(span=span, min_periods=1, adjust=False).mean()
 
 
 def sma(line, window, attribute='mean'):
-    ''' Returns the simple moving average for a list '''
+    ''' Returns the "simple moving average" for a list '''
     line = pd.Series(line)
     return getattr(line.rolling(window=window, min_periods=1), attribute)()
+
+
+def roc(close, n=14):
+    ''' Returns the rate of change in price over n periods '''
+    pct_diff = np.divide(close.diff(n).dropna(), close[:-n]) * 100
+    pct_diff_extended = pct_diff.append(pd.Series(index=range(n)))
+    return pct_diff_extended.sort_index()
 
 
 def sdev(line, window):
@@ -75,6 +82,16 @@ def macd(close, fast=8, slow=21):
 
 
 def rsi(close, n=14):
+    ''' Returns the "relative strength index", which is used to measure the velocity
+    and magnitude of directional price movement.
+    https://www.tradingview.com/scripts/relativestrengthindex/
+
+    Args:
+        close(pandas.Series): dataset 'close' column
+        n(int): n period
+    Returns:
+        np.array: New feature generated.
+    '''
     deltas = np.diff(close)
     seed = deltas[:n+1]
     up = seed[seed > 0].sum()/n
