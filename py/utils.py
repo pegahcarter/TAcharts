@@ -1,11 +1,15 @@
 import pandas as pd
 import numpy as np
+import timeit
 import itertools
+import collections
+from sklearn.linear_model import LinearRegression
 from datetime import datetime, timedelta
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
+import matplotlib.pyplot as plt
 
 
 def group_candles(df, interval):
@@ -63,8 +67,9 @@ def sma(line, window, attribute='mean'):
 
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
-    pct_diff = np.zeros_like(close)
-    pct_diff[n:] = np.divide(np.diff(close, n), close[:-n]) * 100
+    close = np.array(close)
+    pct_diff = np.diff(close, n) / close[:-n] * 100
+    pct_diff = np.insert(pct_diff, 0, [0 for _ in range(n+1)])
     return pct_diff
 
 
