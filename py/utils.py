@@ -63,9 +63,9 @@ def sma(line, window, attribute='mean'):
 
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
-    pct_diff = np.divide(close.diff(n).dropna(), close[:-n]) * 100
-    pct_diff_extended = pct_diff.append(pd.Series(index=range(n)))
-    return pct_diff_extended.sort_index()
+    pct_diff = np.zeros_like(close)
+    pct_diff[n:] = np.divide(np.diff(close, n), close[:-n]) * 100
+    return pct_diff
 
 
 def sdev(line, window):
