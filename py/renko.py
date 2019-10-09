@@ -1,8 +1,5 @@
 from .utils import *
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
+from .ta import *
 
 
 class Renko:
@@ -31,8 +28,8 @@ class Renko:
     def _optimize_brick_size(self, auto, brick_size, atr_period):
         ''' Helper function to get optimal brick size based on ATR '''
         if auto and not brick_size:
-            atr = average_true_range(self.high, self.low, self.close, atr_period)
-            brick_size = np.median(atr)
+            average_true_range = atr(self.high, self.low, self.close, atr_period)
+            brick_size = np.median(average_true_range)
 
         return brick_size
 
@@ -56,7 +53,7 @@ class Renko:
     def _apply_renko(self, date, price):
         ''' Determine if there are any new bricks to paint with current price '''
         num_bricks = 0
-        index = self.close.index(price) + ``
+        index = self.close.index(price) + 1
         gap = (price - self.renko['price'][-1]) // self.brick_size
         direction = np.sign(gap)
         # No gap means there's not a new brick
@@ -74,7 +71,7 @@ class Renko:
         for brick in range(abs(int(num_bricks))):
             self._update_renko(index, date, direction)
 
-        return self.renko
+        return
 
 
     def _update_renko(self, index, date, direction, brick_multiplier=1):
@@ -87,21 +84,35 @@ class Renko:
         return
 
 
-    def plot(self):
-        fig, ax = plt.subplots(1, figsize=(20,10))
+    def plot(self, num_bricks=None, signal_indices=None):
+        fig, ax = plt.subplots(1, figsize=(10, 5))
 
-        fig.suptitle("Renko Chart (brick size = {})".format(round(self.brick_size, 2)), fontsize=20)
-        ax.set_ylabel('Price ($)')
-        plt.rc('axes', labelsize=20)
-        plt.rc('font', size=16)
+        # fig.suptitle("Renko Chart (brick size = {})".format(round(self.brick_size, 2)), fontsize=20)
+        # ax.set_ylabel('Price ($)')
+        # plt.rc('axes', labelsize=20)
+        # plt.rc('font', size=16)
+
+        prices = self.renko['price']
+        directions = self.renko['direction']
+
+        if num_bricks is not None:
+            prices = prices[-num_bricks:]
+            directions = directions[-num_bricks:]
+
+        if signal_indices is not None:
+            for x in signal_indices:
+                plt.axvline(x=x)
 
         # Calculate range for axis
-        ax.set_xlim(0, len(self.renko['price'])+1)
-        ax.set_ylim(min(self.renko['price']) - 2*self.brick_size, max(self.renko['price']) + 2*self.brick_size)
+        ax.set_xlim(0, len(prices) + 1)
+        # ax.set_xlim(0, len(self.renko['price']) + 1)
+        ax.set_ylim(min(prices) - 2*self.brick_size, max(prices) + 2*self.brick_size)
+        # ax.set_ylim(min(self.renko['price']) - 2*self.brick_size, max(self.renko['price']) + 2*self.brick_size)
 
         # Add bricks to chart
-        for x in range(1, len(self.renko['price'])):
-            date, price, direction = map(lambda val: val[x], self.renko.values())
+        for x, (price, direction) in enumerate(zip(prices, directions)):
+        # for x in range(1, len(self.renko['price'])):
+            # index, date, price, direction = map(lambda val: val[x], self.renko.values())
             if direction == 1:
                 facecolor='g'
                 y = price - self.brick_size
@@ -111,7 +122,7 @@ class Renko:
 
             ax.add_patch(
                 patches.Rectangle(
-                    (x, y),
+                    (x+1, y),
                     height=self.brick_size,
                     width=1,
                     facecolor=facecolor

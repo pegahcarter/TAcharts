@@ -1,10 +1,9 @@
-from utils import *
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 pd.plotting.register_matplotlib_converters()
+
+from .utils import *
+from .ta import *
 
 
 class Ichimoku:
