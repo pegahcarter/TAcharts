@@ -1,15 +1,11 @@
-import pandas as pd
-import numpy as np
-import timeit
-import itertools
-import collections
-from sklearn.linear_model import LinearRegression
-from datetime import datetime, timedelta
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import itertools
 
 
 def group_candles(df, interval):
@@ -53,88 +49,6 @@ def fill_values(averages, interval, target_len):
     return avgs_unpack
 
 
-def ema(line, span):
-    ''' Returns the "exponential moving average" for a list '''
-    line = pd.Series(line)
-    return line.ewm(span=span, min_periods=1, adjust=False).mean()
-
-
-def sma(line, window, attribute='mean'):
-    ''' Returns the "simple moving average" for a list '''
-    line = pd.Series(line)
-    return getattr(line.rolling(window=window, min_periods=1), attribute)()
-
-
-def roc(close, n=14):
-    ''' Returns the rate of change in price over n periods '''
-    close = np.array(close)
-    pct_diff = np.diff(close, n) / close[:-n] * 100
-    pct_diff = np.insert(pct_diff, 0, [0 for _ in range(n+1)])
-    return pct_diff
-
-
-def sdev(line, window):
-    ''' Returns the standard deviation of a list '''
-    line = pd.Series(line)
-    return line.rolling(window=window, min_periods=0).std()
-
-
-def macd(close, fast=8, slow=21):
-    ''' Returns the "moving average convergence/divergence" (MACD) '''
-    ema_fast = ema(close, fast)
-    ema_slow = ema(close, slow)
-    return ema_fast - ema_slow
-
-
-def rsi(close, n=14):
-    ''' Returns the "relative strength index", which is used to measure the velocity
-    and magnitude of directional price movement.
-    https://www.tradingview.com/scripts/relativestrengthindex/
-
-    Args:
-        close(pandas.Series): dataset 'close' column
-        n(int): n period
-    Returns:
-        np.array: New feature generated.
-    '''
-    deltas = np.diff(close)
-    seed = deltas[:n+1]
-    up = seed[seed > 0].sum()/n
-    down = -seed[seed < 0].sum()/n
-    rsi = np.zeros_like(close)
-    rsi[:n] = 100. - 100./(1.+ up/down)
-    for i in range(n, len(close)):
-        delta = deltas[i-1]
-        if delta > 0:
-            up_val = delta
-            down_val = 0
-        else:
-            up_val = 0
-            down_val = -delta
-
-        up = (up*(n-1) + up_val)/n
-        down = (down*(n-1) + down_val)/n
-
-        rsi[i] = 100. - 100./(1. + up/down)
-
-    return rsi
-
-
-def atr(high, low, close, window=14):
-    ''' Returns the average true range from candlestick data '''
-    high = np.array(high)
-    low = np.array(low)
-    close = np.array(close)
-    prev_close = np.insert(close[:-1], 0, 0)
-
-    # True range is largest of the following:
-    #   a. Current high - current low
-    #   b. Absolute value of current high - previous close
-    #   c. Absolute value of current low - previous close
-    true_range = maxmin('max', high - low, abs(high - prev_close), abs(low - prev_close))
-    return sma(true_range, window)
-
-
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
     x1_gt_x2 = x1 > x2
@@ -142,6 +56,18 @@ def crossover(x1, x2):
     cross = np.insert(cross, 0, False)
     cross_indices = np.flatnonzero(cross)
     return cross_indices
+
+
+# def crossover(x1, x2):
+#     ''' Find all instances of intersections between two lines '''
+#     crossovers = {}
+#     x1_gt_x2 = list(x1 > x2)
+#     current_val = x1_gt_x2[0]
+#     for index, val in enumerate(x1_gt_x2[1:]):
+#         if val != current_val:
+#             crossovers[index+1] = val
+#         current_val = val
+#     return crossovers
 
 
 def intersection(a0, a1, b0, b1):
@@ -219,15 +145,3 @@ def draw_candlesticks(ax, df):
 
     ax.autoscale_view()
     return lines, patches
-
-
-# def crossover(x1, x2):
-#     ''' Find all instances of intersections between two lines '''
-#     crossovers = {}
-#     x1_gt_x2 = list(x1 > x2)
-#     current_val = x1_gt_x2[0]
-#     for index, val in enumerate(x1_gt_x2[1:]):
-#         if val != current_val:
-#             crossovers[index+1] = val
-#         current_val = val
-#     return crossovers
