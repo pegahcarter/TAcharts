@@ -49,6 +49,14 @@ def fill_values(averages, interval, target_len):
     return avgs_unpack
 
 
+def args_to_numpy_array(fn):
+    def wrapper(*args, **kwargs):
+        arr = [np.array(x) for x in args]
+        return fn(*arr, **kwargs)
+    return wrapper
+
+
+@args_to_numpy_array
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
     x1_gt_x2 = x1 > x2
@@ -83,9 +91,10 @@ def intersection(a0, a1, b0, b1):
     return x, y
 
 
+@args_to_numpy_array
 def area_between(line1, line2):
     ''' Return the area between line1 and line2 '''
-    diff = np.subtract(line1, line2)
+    diff = line1 - line2
     x1 = diff[:-1]
     x2 = diff[1:]
 

@@ -4,6 +4,13 @@ import numpy as np
 from .utils import maxmin
 
 
+def args_to_numpy_array(fn):
+    def wrapper(*args, **kwargs):
+        arr = [np.array(x) for x in args]
+        return fn(*arr, **kwargs)
+    return wrapper
+
+
 def ema(line, span):
     ''' Returns the "exponential moving average" for a list '''
 
@@ -11,11 +18,14 @@ def ema(line, span):
     return line.ewm(span=span, min_periods=1, adjust=False).mean()
 
 
-def sma(line, window, attribute='mean'):
+@args_to_numpy_array
+def sma(close, window=14):
     ''' Returns the "simple moving average" for a list '''
 
-    line = pd.Series(line)
-    return getattr(line.rolling(window=window, min_periods=1), attribute)()
+    arr = close.cumsum()
+    arr[window:] = arr[window:] - arr[:-window]
+    arr[:window] = 0
+    return arr / window
 
 
 def macd(close, fast=8, slow=21):
@@ -26,13 +36,11 @@ def macd(close, fast=8, slow=21):
     return ema_fast - ema_slow
 
 
+@args_to_numpy_array
 def atr(high, low, close, window=14):
     ''' Returns the average true range from candlestick data '''
 
-    high = np.array(high)
-    low = np.array(low)
-    close = np.array(close)
-    prev_close = np.insert(close[:-1], 0, 0)
+    prev_close = np.array([0] + close[:-1])
     # True range is largest of the following:
     #   a. Current high - current low
     #   b. Absolute value of current high - previous close
@@ -82,3 +90,10 @@ def rsi(close, n=14):
         rsi[i] = 100. - 100./(1. + up/down)
 
     return rsi
+
+
+
+# def sma(line, window, attribute='mean'):
+#
+#     line = pd.Series(line)
+#     return getattr(line.rolling(window=window, min_periods=1), attribute)()
