@@ -6,8 +6,8 @@ from .utils import maxmin
 
 def args_to_numpy_array(fn):
     def wrapper(*args, **kwargs):
-        arr = [np.array(x) for x in args]
-        return fn(*arr, **kwargs)
+        args = [np.array(x) if not isinstance(x, np.ndarray) else x for x in args]
+        return fn(*args, **kwargs)
     return wrapper
 
 
@@ -28,6 +28,7 @@ def sma(close, window=14):
     return arr / window
 
 
+@args_to_numpy_array
 def macd(close, fast=8, slow=21):
     ''' Returns the "moving average convergence/divergence" (MACD) '''
 
@@ -40,7 +41,7 @@ def macd(close, fast=8, slow=21):
 def atr(high, low, close, window=14):
     ''' Returns the average true range from candlestick data '''
 
-    prev_close = np.array([0] + close[:-1])
+    prev_close = np.insert(close[:-1], 0, 0)
     # True range is largest of the following:
     #   a. Current high - current low
     #   b. Absolute value of current high - previous close
@@ -49,22 +50,16 @@ def atr(high, low, close, window=14):
     return sma(true_range, window)
 
 
-def sdev(line, window):
-    ''' Returns the standard deviation of a list '''
-
-    line = pd.Series(line)
-    return line.rolling(window=window, min_periods=0).std()
-
-
+@args_to_numpy_array
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
-    close = np.array(close)
-    pct_diff = np.diff(close, n) / close[:-n] * 100
-    pct_diff = np.insert(pct_diff, 0, [0 for _ in range(n+1)])
+    pct_diff = np.zeros_like(close)
+    pct_diff[n:] = np.diff(close, n) / close[:-n] * 100
     return pct_diff
 
 
+@args_to_numpy_array
 def rsi(close, n=14):
     ''' Returns the "relative strength index", which is used to measure the velocity
     and magnitude of directional price movement.'''

@@ -1,6 +1,7 @@
 from .utils import *
 from .ta import *
-
+from matplotlib.patches import Rectangle
+import matplotlib.pyplot as plt
 
 class Renko:
     def __init__(self, df):
@@ -45,6 +46,8 @@ class Renko:
             'price': [start_price],
             'direction': [0]
         }
+        # TODO: using [1:] fucks up slopemagic.  Need to fix.
+        # Hood fix: not adding 1 to signal index
         for date, price in zip(self.date[1:], self.close[1:]):
             self._apply_renko(date, price)
         return self.renko.values()
@@ -53,7 +56,8 @@ class Renko:
     def _apply_renko(self, date, price):
         ''' Determine if there are any new bricks to paint with current price '''
         num_bricks = 0
-        index = self.close.index(price) + 1
+        # index = self.close.index(price) + 1
+        index = self.close.index(price)
         gap = (price - self.renko['price'][-1]) // self.brick_size
         direction = np.sign(gap)
         # No gap means there's not a new brick
@@ -121,7 +125,7 @@ class Renko:
                 y = price
 
             ax.add_patch(
-                patches.Rectangle(
+                Rectangle(
                     (x+1, y),
                     height=self.brick_size,
                     width=1,
