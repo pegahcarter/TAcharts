@@ -48,17 +48,17 @@ class Renko:
         }
         # TODO: using [1:] fucks up slopemagic.  Need to fix.
         # Hood fix: not adding 1 to signal index
-        for date, price in zip(self.date[1:], self.close[1:]):
-            self._apply_renko(date, price)
-        return self.renko.values()
+        for i in range(1, len(self.close)):
+            self._apply_renko(i)
+
+        return
 
 
-    def _apply_renko(self, date, price):
+    def _apply_renko(self, i):
         ''' Determine if there are any new bricks to paint with current price '''
         num_bricks = 0
-        # index = self.close.index(price) + 1
-        index = self.close.index(price)
-        gap = (price - self.renko['price'][-1]) // self.brick_size
+
+        gap = (self.close[i] - self.renko['price'][-1]) // self.brick_size
         direction = np.sign(gap)
         # No gap means there's not a new brick
         if direction == 0:
@@ -70,21 +70,21 @@ class Renko:
         # Gap >= 2 or -2 and opposite renko direction means we're switching brick direction
         elif np.abs(gap) >= 2:
             num_bricks = gap - 2*direction
-            self._update_renko(index, date, direction, 2)
+            self._update_renko(i, direction, 2)
 
         for brick in range(abs(int(num_bricks))):
-            self._update_renko(index, date, direction)
+            self._update_renko(i, direction)
 
         return
 
 
-    def _update_renko(self, index, date, direction, brick_multiplier=1):
+    def _update_renko(self, i, direction, brick_multiplier=1):
         ''' Append price and new block to renko dict '''
         renko_price = self.renko['price'][-1] + (direction * brick_multiplier * self.brick_size)
-        self.renko['index'].append(index)
-        self.renko['date'].append(date)
+        self.renko['index'].append(i)
         self.renko['price'].append(renko_price)
         self.renko['direction'].append(direction)
+        self.renko['date'].append(self.date[i])
         return
 
 
