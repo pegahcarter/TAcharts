@@ -36,8 +36,6 @@ def fill_values(averages, interval, target_len):
     Example: You're using 15-min candlestick data but want to include a 1-hour moving
         average with a value at every 15-min mark, and not just every 1-hour mark.
     '''
-    if not isinstance(averages, list):
-        averages = list(averages)
     # Combine every two values with the number of intervals between each value
     avgs_zip = zip(averages[:-1], averages[1:], itertools.repeat(interval), itertools.repeat(False))
     # Generate evenly-spaced samples between every point
@@ -45,7 +43,7 @@ def fill_values(averages, interval, target_len):
     # Unpack all values into one list
     avgs_unpack = list(itertools.chain.from_iterable(avgs_gen))
     # Extend the list to have as many values as our target dataframe
-    avgs_unpack.extend([averages[-1]] * (target_len - len(avgs_unpack)))
+    avgs_unpack += [averages[-1]] * (target_len - len(avgs_unpack))
     return avgs_unpack
 
 
