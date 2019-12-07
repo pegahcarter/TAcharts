@@ -4,21 +4,26 @@ import numpy as np
 from .utils import maxmin
 
 
-def args_to_numpy_array(fn):
-    def wrapper(*args, **kwargs):
-        args = [np.array(x) if not isinstance(x, np.ndarray) else x for x in args]
-        return fn(*args, **kwargs)
-    return wrapper
+def args_to_dtype(dtype):
+    ''' Convert arguments in a function to a specific data type, depending on what
+        actions will be done with the arguments '''
+
+    def format_args(fn):
+        def wrapper(*args, **kwargs):
+            args = [dtype(x) if type(x) != dtype else x for x in args]
+            return fn(*args, **kwargs)
+        return wrapper
+    return format_args
 
 
-def ema(line, span):
+@args_to_dtype(pd.Series)
+def ema(line, span=2):
     ''' Returns the "exponential moving average" for a list '''
 
-    line = pd.Series(line)
     return line.ewm(span=span, min_periods=1, adjust=False).mean()
 
 
-@args_to_numpy_array
+@args_to_dtype(np.array)
 def sma(close, window=14):
     ''' Returns the "simple moving average" for a list '''
 
@@ -28,7 +33,7 @@ def sma(close, window=14):
     return arr / window
 
 
-@args_to_numpy_array
+
 def macd(close, fast=8, slow=21):
     ''' Returns the "moving average convergence/divergence" (MACD) '''
 
@@ -37,7 +42,7 @@ def macd(close, fast=8, slow=21):
     return ema_fast - ema_slow
 
 
-@args_to_numpy_array
+@args_to_dtype(np.array)
 def atr(high, low, close, window=14):
     ''' Returns the average true range from candlestick data '''
 
@@ -50,7 +55,7 @@ def atr(high, low, close, window=14):
     return sma(true_range, window)
 
 
-@args_to_numpy_array
+@args_to_dtype(np.array)
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
@@ -59,7 +64,7 @@ def roc(close, n=14):
     return pct_diff
 
 
-@args_to_numpy_array
+@args_to_dtype(list)
 def rsi(close, n=14):
     ''' Returns the "relative strength index", which is used to measure the velocity
     and magnitude of directional price movement.'''
@@ -85,10 +90,3 @@ def rsi(close, n=14):
         rsi[i] = 100. - 100./(1. + up/down)
 
     return rsi
-
-
-
-# def sma(line, window, attribute='mean'):
-#
-#     line = pd.Series(line)
-#     return getattr(line.rolling(window=window, min_periods=1), attribute)()

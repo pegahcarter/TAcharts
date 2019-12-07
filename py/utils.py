@@ -52,14 +52,19 @@ def fill_values(averages, interval, target_len):
     return avgs_unpack
 
 
-def args_to_numpy_array(fn):
-    def wrapper(*args, **kwargs):
-        arr = [np.array(x) for x in args]
-        return fn(*arr, **kwargs)
-    return wrapper
+def args_to_dtype(dtype):
+    ''' Convert arguments in a function to a specific data type, depending on what
+        actions will be done with the arguments '''
+
+    def format_args(fn):
+        def wrapper(*args, **kwargs):
+            args = [dtype(x) if type(x) != dtype else x for x in args]
+            return fn(*args, **kwargs)
+        return wrapper
+    return format_args
 
 
-@args_to_numpy_array
+@args_to_dtype(np.array)
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
     x1_gt_x2 = x1 > x2
@@ -67,18 +72,6 @@ def crossover(x1, x2):
     cross = np.insert(cross, 0, False)
     cross_indices = np.flatnonzero(cross)
     return cross_indices
-
-
-# def crossover(x1, x2):
-#     ''' Find all instances of intersections between two lines '''
-#     crossovers = {}
-#     x1_gt_x2 = list(x1 > x2)
-#     current_val = x1_gt_x2[0]
-#     for index, val in enumerate(x1_gt_x2[1:]):
-#         if val != current_val:
-#             crossovers[index+1] = val
-#         current_val = val
-#     return crossovers
 
 
 def intersection(a0, a1, b0, b1):
@@ -94,7 +87,7 @@ def intersection(a0, a1, b0, b1):
     return x, y
 
 
-@args_to_numpy_array
+@args_to_dtype(np.array)
 def area_between(line1, line2):
     ''' Return the area between line1 and line2 '''
     diff = line1 - line2
@@ -107,6 +100,7 @@ def area_between(line1, line2):
     return np.sum([triangle_area, square_area])
 
 
+@args_to_dtype(list)
 def maxmin(max_or_min, *args):
     ''' Compare lists and return the max or min value at each index '''
     if max_or_min == 'max':
