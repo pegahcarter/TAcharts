@@ -8,7 +8,6 @@ import numpy as np
 import itertools
 import time
 import requests
-from urllib import urlencode
 from datetime import datetime, timedelta
 
 
