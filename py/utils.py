@@ -3,13 +3,12 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
 import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
 import itertools
 import time
 import requests
 from datetime import datetime, timedelta
 
+from .wrappers import *
 
 
 def group_candles(df, interval):
@@ -19,6 +18,7 @@ def group_candles(df, interval):
     Example: You have 15-min candlestick data but want to test a strategy based
         on 1-hour candlestick data  (interval=4).
     '''
+
     columns = ['date', 'open', 'high', 'low', 'close', 'volume']
     candles = np.array(df[columns])
     results = []
@@ -40,6 +40,7 @@ def fill_values(averages, interval, target_len):
     Example: You're using 15-min candlestick data but want to include a 1-hour moving
         average with a value at every 15-min mark, and not just every 1-hour mark.
     '''
+
     # Combine every two values with the number of intervals between each value
     avgs_zip = zip(averages[:-1], averages[1:], itertools.repeat(interval), itertools.repeat(False))
     # Generate evenly-spaced samples between every point
@@ -51,21 +52,10 @@ def fill_values(averages, interval, target_len):
     return avgs_unpack
 
 
-def args_to_dtype(dtype):
-    ''' Convert arguments in a function to a specific data type, depending on what
-        actions will be done with the arguments '''
-
-    def format_args(fn):
-        def wrapper(*args, **kwargs):
-            args = [dtype(x) if type(x) != dtype else x for x in args]
-            return fn(*args, **kwargs)
-        return wrapper
-    return format_args
-
-
-@args_to_dtype(np.array)
+@pd_series_to_np_array
 def crossover(x1, x2):
     ''' Find all instances of intersections between two lines '''
+
     x1_gt_x2 = x1 > x2
     cross = np.diff(x1_gt_x2)
     cross = np.insert(cross, 0, False)
@@ -75,6 +65,7 @@ def crossover(x1, x2):
 
 def intersection(a0, a1, b0, b1):
     ''' Return the intersection coordinates between vector A and vector B '''
+
     a_diff = a1 - a0
     b_diff = b1 - b0
 
@@ -86,9 +77,10 @@ def intersection(a0, a1, b0, b1):
     return x, y
 
 
-@args_to_dtype(np.array)
+@pd_series_to_np_array
 def area_between(line1, line2):
     ''' Return the area between line1 and line2 '''
+
     diff = line1 - line2
     x1 = diff[:-1]
     x2 = diff[1:]
@@ -102,6 +94,7 @@ def area_between(line1, line2):
 @args_to_dtype(list)
 def maxmin(max_or_min, *args):
     ''' Compare lists and return the max or min value at each index '''
+
     if max_or_min == 'max':
         return np.amax(args, axis=0)
     elif max_or_min == 'min':
@@ -112,6 +105,7 @@ def maxmin(max_or_min, *args):
 
 def draw_candlesticks(ax, df):
     ''' Add candlestick visuals to a matplotlib graph '''
+    
     df = df[['date', 'open', 'high', 'low', 'close']].dropna()
     lines = []
     patches = []

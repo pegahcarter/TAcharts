@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def args_to_dtype(dtype):
@@ -13,7 +14,7 @@ def args_to_dtype(dtype):
     return format_args
 
 
-def pd_series_to_numpy(fn):
+def pd_series_to_np_array(fn):
     ''' Convert pandas.Series objects to numpy.array objects.  pd.Series.to_numpy() is
     10x quicker than np.array(pd.Series) '''
 

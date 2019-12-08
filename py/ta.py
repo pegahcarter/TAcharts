@@ -1,19 +1,5 @@
-import pandas as pd
-import numpy as np
-
 from .utils import maxmin
-
-
-def args_to_dtype(dtype):
-    ''' Convert arguments in a function to a specific data type, depending on what
-        actions will be done with the arguments '''
-
-    def format_args(fn):
-        def wrapper(*args, **kwargs):
-            args = [dtype(x) if type(x) != dtype else x for x in args]
-            return fn(*args, **kwargs)
-        return wrapper
-    return format_args
+from .wrappers import *
 
 
 @args_to_dtype(pd.Series)
@@ -23,7 +9,7 @@ def ema(line, span=2):
     return line.ewm(span=span, min_periods=1, adjust=False).mean()
 
 
-@args_to_dtype(np.array)
+@pd_series_to_np_array
 def sma(close, window=14):
     ''' Returns the "simple moving average" for a list '''
 
@@ -42,7 +28,7 @@ def macd(close, fast=8, slow=21):
     return ema_fast - ema_slow
 
 
-@args_to_dtype(np.array)
+@pd_series_to_np_array
 def atr(high, low, close, window=14):
     ''' Returns the average true range from candlestick data '''
 
@@ -55,7 +41,7 @@ def atr(high, low, close, window=14):
     return sma(true_range, window)
 
 
-@args_to_dtype(np.array)
+@pd_series_to_np_array
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
@@ -67,7 +53,7 @@ def roc(close, n=14):
 @args_to_dtype(list)
 def rsi(close, n=14):
     ''' Returns the "relative strength index", which is used to measure the velocity
-    and magnitude of directional price movement.'''
+    and magnitude of directional price movement. '''
 
     deltas = np.diff(close)
     seed = deltas[:n+1]
@@ -95,7 +81,7 @@ def rsi(close, n=14):
 
 @args_to_dtype(list)
 def td_sequential(close, n=4):
-    ''' Returns the TD sequential of the close  '''
+    ''' Returns the TD sequential of the close '''
 
     last_diff = False
     td_sequential = [0, 0, 0, 0]
