@@ -90,3 +90,24 @@ def rsi(close, n=14):
         rsi[i] = 100. - 100./(1. + up/down)
 
     return rsi
+
+
+
+@args_to_dtype(list)
+def td_sequential(close, n=4):
+    ''' Returns the TD sequential of the close  '''
+
+    last_diff = False
+    td_sequential = [0, 0, 0, 0]
+
+    for old_val, new_val in zip(close[:-n], close[n:]):
+        diff = old_val > new_val
+
+        if diff == last_diff:
+            td_sequential.append(td_sequential[-1] + 1)
+        else:
+            td_sequential.append(1)
+
+        last_diff = diff
+
+    return td_sequential
