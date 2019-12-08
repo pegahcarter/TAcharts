@@ -15,10 +15,10 @@ def args_to_dtype(dtype):
 
 
 def pd_series_to_np_array(fn):
-    ''' Convert pandas.Series objects to numpy.array objects.  pd.Series.to_numpy() is
+    ''' Convert pandas.Series objects to numpy.array objects.  pd.Series.values is
     10x quicker than np.array(pd.Series) '''
 
     def wrapper(*args, **kwargs):
-        args = [pd.Series(x).to_numpy() if type(x) != pd.Series else x.to_numpy() for x in args]
+        args = [pd.Series(x).values if type(x) != pd.Series else x.values for x in args]
         return fn(*args, **kwargs)
     return wrapper
