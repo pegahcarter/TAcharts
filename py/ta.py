@@ -83,17 +83,16 @@ def rsi(close, n=14):
 def td_sequential(close, n=4):
     ''' Returns the TD sequential of the close '''
 
-    last_diff = False
+    old_gt_new = close[:-n] > close[n:]
+    diff_lst = np.diff(old_gt_new)
+    diff_lst = np.insert(diff_lst, 0, False)
+
     td_sequential = [0, 0, 0, 0]
 
-    for old_val, new_val in zip(close[:-n], close[n:]):
-        diff = old_val > new_val
-
-        if diff == last_diff:
+    for diff in diff_lst:
+        if not diff:
             td_sequential.append(td_sequential[-1] + 1)
         else:
             td_sequential.append(1)
-
-        last_diff = diff
 
     return td_sequential
