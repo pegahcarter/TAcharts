@@ -2,22 +2,29 @@ from .utils import maxmin
 from .wrappers import *
 
 
+@pd_series_to_np_array
+def sma(close, n=14):
+    ''' Returns the "simple moving average" for a list across n periods'''
+
+    summed = rolling_sum(close, n=n)
+    return summed / n
+
+
+@args_to_dtype(np.array)
+def rolling_sum(close, n=20):
+    ''' Returns the rolling sum for a list across n periods '''
+
+    arr = close.cumsum()
+    arr[n:] = arr[n:] - arr[:-n]
+    arr[:n] = 0.000000001
+    return arr
+
+
 @args_to_dtype(pd.Series)
 def ema(line, span=2):
     ''' Returns the "exponential moving average" for a list '''
 
     return line.ewm(span=span, min_periods=1, adjust=False).mean()
-
-
-@pd_series_to_np_array
-def sma(close, window=14):
-    ''' Returns the "simple moving average" for a list '''
-
-    arr = close.cumsum()
-    arr[window:] = arr[window:] - arr[:-window]
-    arr[:window] = 0
-    return arr / window
-
 
 
 def macd(close, fast=8, slow=21):
@@ -29,7 +36,7 @@ def macd(close, fast=8, slow=21):
 
 
 @pd_series_to_np_array
-def atr(high, low, close, window=14):
+def atr(high, low, close, n=14):
     ''' Returns the average true range from candlestick data '''
 
     prev_close = np.insert(close[:-1], 0, 0)
@@ -38,7 +45,7 @@ def atr(high, low, close, window=14):
     #   b. Absolute value of current high - previous close
     #   c. Absolute value of current low - previous close
     true_range = maxmin('max', high - low, abs(high - prev_close), abs(low - prev_close))
-    return sma(true_range, window)
+    return sma(true_range, n)
 
 
 @pd_series_to_np_array
