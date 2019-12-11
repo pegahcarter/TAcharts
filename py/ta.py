@@ -103,3 +103,23 @@ def td_sequential(close, n=4):
             td_sequential.append(1)
 
     return td_sequential
+
+
+def chaikin_money_flow(df, n=20):
+    ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
+
+    _open = df['open'].values
+    high = df['high'].values
+    low = df['low'].values
+    close = df['close'].values
+    volume = df['volume'].values
+
+    avg = (2*close - high - low) / (high - low + .000000001) * volume
+
+    avg_roll = rolling_sum(avg, n=n)
+    vol_roll = rolling_sum(volume, n=n)
+
+    cmf = avg_roll / vol_roll
+    cmf[:n] = 0
+
+    return cmf
