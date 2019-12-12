@@ -44,7 +44,7 @@ def atr(high, low, close, n=14):
     #   a. Current high - current low
     #   b. Absolute value of current high - previous close
     #   c. Absolute value of current low - previous close
-    true_range = maxmin('max', high - low, abs(high - prev_close), abs(low - prev_close))
+    true_range = maxmin(high - low, abs(high - prev_close), abs(low - prev_close), max_or_min='max')
     return sma(true_range, n)
 
 
@@ -108,7 +108,6 @@ def td_sequential(close, n=4):
 def chaikin_money_flow(df, n=20):
     ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
 
-    _open = df['open'].values
     high = df['high'].values
     low = df['low'].values
     close = df['close'].values

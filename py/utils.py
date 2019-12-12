@@ -92,20 +92,20 @@ def area_between(line1, line2):
 
 
 @args_to_dtype(list)
-def maxmin(max_or_min, *args):
+def maxmin(*args, max_or_min=None, axis=0):
     ''' Compare lists and return the max or min value at each index '''
 
     if max_or_min == 'max':
-        return np.amax(args, axis=0)
+        return np.amax(args, axis=axis)
     elif max_or_min == 'min':
-        return np.amin(args, axis=0)
+        return np.amin(args, axis=axis)
     else:
         raise ValueError('Enter "max" or "min" as max_or_min parameter.')
 
 
 def draw_candlesticks(ax, df):
     ''' Add candlestick visuals to a matplotlib graph '''
-    
+
     df = df[['date', 'open', 'high', 'low', 'close']].dropna()
     lines = []
     patches = []
