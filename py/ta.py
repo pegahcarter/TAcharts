@@ -7,24 +7,26 @@ def sma(close, n=14):
     ''' Returns the "simple moving average" for a list across n periods'''
 
     summed = rolling_sum(close, n=n)
-    return summed / n
+    _sma = summed / n
+    return _sma
 
 
 @args_to_dtype(np.array)
 def rolling_sum(close, n=20):
     ''' Returns the rolling sum for a list across n periods '''
 
-    arr = close.cumsum()
-    arr[n:] = arr[n:] - arr[:-n]
-    arr[:n] = 0.000000001
-    return arr
+    _rolling_sum = close.cumsum()
+    _rolling_sum[n:] = _rolling_sum[n:] - _rolling_sum[:-n]
+    _rolling_sum[:n] = 0.000000001
+    return _rolling_sum
 
 
 @args_to_dtype(pd.Series)
 def ema(line, span=2):
     ''' Returns the "exponential moving average" for a list '''
 
-    return line.ewm(span=span, min_periods=1, adjust=False).mean()
+    _ema = line.ewm(span=span, min_periods=1, adjust=False).mean()
+    return _ema
 
 
 def macd(close, fast=8, slow=21):
@@ -32,7 +34,8 @@ def macd(close, fast=8, slow=21):
 
     ema_fast = ema(close, fast)
     ema_slow = ema(close, slow)
-    return ema_fast - ema_slow
+    _macd = ema_fast - ema_slow
+    return _macd
 
 
 @pd_series_to_np_array
@@ -45,16 +48,17 @@ def atr(high, low, close, n=14):
     #   b. Absolute value of current high - previous close
     #   c. Absolute value of current low - previous close
     true_range = maxmin(high - low, abs(high - prev_close), abs(low - prev_close), max_or_min='max')
-    return sma(true_range, n)
+    _atr = sma(true_range, n)
+    return _atr
 
 
 @pd_series_to_np_array
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
-    pct_diff = np.zeros_like(close)
-    pct_diff[n:] = np.diff(close, n) / close[:-n] * 100
-    return pct_diff
+    _roc = np.zeros_like(close)
+    _roc[n:] = np.diff(close, n) / close[:-n] * 100
+    return _roc
 
 
 @args_to_dtype(list)
@@ -66,8 +70,8 @@ def rsi(close, n=14):
     seed = deltas[:n+1]
     up = seed[seed > 0].sum()/n
     down = -seed[seed < 0].sum()/n
-    rsi = np.zeros_like(close)
-    rsi[:n] = 100. - 100./(1.+ up/down)
+    _rsi = np.zeros_like(close)
+    _rsi[:n] = 100. - 100./(1.+ up/down)
     for i in range(n, len(close)):
         delta = deltas[i-1]
         if delta > 0:
@@ -80,9 +84,9 @@ def rsi(close, n=14):
         up = (up*(n-1) + up_val)/n
         down = (down*(n-1) + down_val)/n
 
-        rsi[i] = 100. - 100./(1. + up/down)
+        _rsi[i] = 100. - 100./(1. + up/down)
 
-    return rsi
+    return _rsi
 
 
 
@@ -94,15 +98,15 @@ def td_sequential(close, n=4):
     diff_lst = np.diff(old_gt_new)
     diff_lst = np.insert(diff_lst, 0, False)
 
-    td_sequential = [0, 0, 0, 0]
+    _td_sequential = [0, 0, 0, 0]
 
     for diff in diff_lst:
         if not diff:
-            td_sequential.append(td_sequential[-1] + 1)
+            _td_sequential.append(_td_sequential[-1] + 1)
         else:
-            td_sequential.append(1)
+            _td_sequential.append(1)
 
-    return td_sequential
+    return _td_sequential
 
 
 def chaikin_money_flow(df, n=20):
@@ -118,7 +122,28 @@ def chaikin_money_flow(df, n=20):
     avg_roll = rolling_sum(avg, n=n)
     vol_roll = rolling_sum(volume, n=n)
 
-    cmf = avg_roll / vol_roll
-    cmf[:n] = 0
+    _chaikin_money_flow = avg_roll / vol_roll
+    _chaikin_money_flow[:n] = 0
 
-    return cmf
+    return _chaikin_money_flow
+
+
+@pd_series_to_np_array
+def murrey_math_oscillator(close, n=100):
+
+    shape = (len(close) - n + 1, n)
+    strides = close.strides * 2
+    close_strided = np.lib.stride_tricks.as_strided(close, shape=shape, strides=strides)
+
+    highest = np.amax(close_strided, axis=1)
+    lowest = np.amin(close_strided, axis=1)
+
+    rng = highest - lowest
+
+    rng_multiplier = rng * .125
+    midline = lowest + rng_multiplier * 4
+
+    _murrey_math_oscillator = np.zeros_like(close)
+    _murrey_math_oscillator[n-1:] = (close[n-1:] - midline) / rng
+
+    return _murrey_math_oscillator
