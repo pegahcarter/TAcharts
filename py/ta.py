@@ -130,16 +130,19 @@ def chaikin_money_flow(df, n=20):
 
 @pd_series_to_np_array
 def murrey_math_oscillator(close, n=100):
+    ''' Returns the Murrey Math Oscillator of the close '''
 
     shape = (len(close) - n + 1, n)
     strides = close.strides * 2
     close_strided = np.lib.stride_tricks.as_strided(close, shape=shape, strides=strides)
 
+    # Donchian channel
     highest = np.amax(close_strided, axis=1)
     lowest = np.amin(close_strided, axis=1)
 
     rng = highest - lowest
 
+    # Oscillator
     rng_multiplier = rng * .125
     midline = lowest + rng_multiplier * 4
 
