@@ -101,7 +101,6 @@ def rsi(close, n=14):
     return _rsi
 
 
-
 @pd_series_to_np_array
 def td_sequential(close, n=4):
     ''' Returns the TD sequential of the close '''
@@ -131,11 +130,11 @@ def chaikin_money_flow(df, n=20):
 
     avg = (2*close - high - low) / (high - low + .000000001) * volume
 
-    avg_roll = rolling_sum(avg, n=n)
-    vol_roll = rolling_sum(volume, n=n)
+    avg_roll = rolling(avg, fn='sum', n=n)
+    vol_roll = rolling(volume, fn='sum', n=n)
 
     _chaikin_money_flow = avg_roll / vol_roll
-    _chaikin_money_flow[:n] = 0
+    _chaikin_money_flow[:n] = 0.000000001
 
     return _chaikin_money_flow
 
@@ -144,13 +143,9 @@ def chaikin_money_flow(df, n=20):
 def murrey_math_oscillator(close, n=100):
     ''' Returns the Murrey Math Oscillator of the close '''
 
-    shape = (len(close) - n + 1, n)
-    strides = close.strides * 2
-    close_strided = np.lib.stride_tricks.as_strided(close, shape=shape, strides=strides)
-
     # Donchian channel
-    highest = np.amax(close_strided, axis=1)
-    lowest = np.amin(close_strided, axis=1)
+    highest = rolling(close, fn='max', n=n)
+    lowest = rolling(close, fn='min', n=n)
 
     rng = highest - lowest
 

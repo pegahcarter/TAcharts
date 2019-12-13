@@ -8,13 +8,13 @@ TA charting tools:
 * Renko
 
 Technical tools (located in `ta.py`):
-* `sma(close, n=14)`: simple moving average for a list of `close` prices across `n` periods
-* `rolling_sum(list, n=20)`: rolling sum for a list across `n` periods
+* `sma(close, n=14)`: simple moving average of `close` prices across `n` periods
+* `rolling(close, fn=None, n=20)`: rolling `sum`, `max`, or `min` of `close` prices across `n` periods
 * `ema(close, n=2)`: exponential moving average for a list of `close` prices across `n` periods
-* `macd(close, fast=8, slow=21)`: moving average convergence/divergence for a list of `close` prices
+* `macd(close, fast=8, slow=21)`: moving average convergence/divergence of `close` prices
 * `atr(high, low, close, n=14)`: average true range from candlestick `high`, `low`, and `close` prices across `n` periods
-* `roc(close, n=14)`: rate of change in `close` prices across `n` periods
-* `rsi(close, n=14)`: relative strength index in `close` prices across `n` periods
+* `roc(close, n=14)`: rate of change of `close` prices across `n` periods
+* `rsi(close, n=14)`: relative strength index of `close` prices across `n` periods
 * `td_sequential(close, n=4)`: TD sequential of `close` prices across `n` periods
 * `chaikin_money_flow(df, n=20)`: Chaikin Money Flow of an OHLCV dataset
 
