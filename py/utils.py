@@ -91,17 +91,6 @@ def area_between(line1, line2):
     return np.sum([triangle_area, square_area])
 
 
-def maxmin(*args, max_or_min=None, axis=0):
-    ''' Compare lists and return the max or min value at each index '''
-
-    if max_or_min == 'max':
-        return np.amax(args, axis=axis)
-    elif max_or_min == 'min':
-        return np.amin(args, axis=axis)
-    else:
-        raise ValueError('Enter "max" or "min" as max_or_min parameter.')
-
-
 def draw_candlesticks(ax, df):
     ''' Add candlestick visuals to a matplotlib graph '''
 

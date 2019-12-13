@@ -1,9 +1,8 @@
-from .utils import maxmin
 from .wrappers import *
 
 
 @pd_series_to_np_array
-def rolling(arr, fn=None, n=2):
+def rolling(*arr, n=2, fn=None, axis=0):
     ''' Returns the rolling sum, max, or min for a list across n periods '''
 
     # rolling sum
@@ -13,17 +12,20 @@ def rolling(arr, fn=None, n=2):
         rolling_sum[:n] = .000000001
         return rolling_sum
 
-    # rolling max or rolling min
-    elif fn == 'max' or fn == 'min':
+    # rolling max, min, or mean
+    elif fn in ['max', 'min', 'mean']:
         shape = (len(arr - n + 1), n)
         strides = arr.strides * 2
         arr_strided = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
-        rolling_maxmin = np.zeros(arr.shape)
-        rolling_maxmin[n:] = maxmin(*arr, max_or_min=fn, axis=1)
-        return rolling_maxmin
+
+        # rolling_maxmin = np.zeros(arr.shape)
+        # rolling_maxmin[n:] = maxmin(*arr, fn=fn, axis=1)
+
+        _rolling = getattr(np, fn)(arr_strided, axis=axis)
+        return _rolling
 
     else:
-        raise ValueError('Enter "sum", "max", or "min" as fn argument')
+        raise ValueError('Enter "sum", "max", "min", or "mean" as fn argument')
 
 
 @pd_series_to_np_array
@@ -61,7 +63,7 @@ def atr(high, low, close, n=14):
     #   a. Current high - current low
     #   b. Absolute value of current high - previous close
     #   c. Absolute value of current low - previous close
-    true_range = maxmin(high - low, abs(high - prev_close), abs(low - prev_close), max_or_min='max')
+    true_range = rolling(high - low, abs(high - prev_close), abs(low - prev_close), fn='max', n=1, axis=0)
     _atr = sma(true_range, n)
     return _atr
 
