@@ -18,7 +18,9 @@ def rolling(arr, fn=None, n=2):
         shape = (len(arr - n + 1), n)
         strides = arr.strides * 2
         arr_strided = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
-        return maxmin(*arr, max_or_min=fn, axis=1)
+        rolling_maxmin = np.zeros(arr.shape)
+        rolling_maxmin[n:] = maxmin(*arr, max_or_min=fn, axis=1)
+        return rolling_maxmin
 
     else:
         raise ValueError('Enter "sum", "max", or "min" as fn argument')
@@ -68,7 +70,7 @@ def atr(high, low, close, n=14):
 def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
-    _roc = np.zeros_like(close)
+    _roc = np.zeros(close.shape)
     _roc[n:] = np.diff(close, n) / close[:-n] * 100
     return _roc
 
