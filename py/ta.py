@@ -3,22 +3,34 @@ from .wrappers import *
 
 
 @pd_series_to_np_array
+def rolling(arr, fn=None, n=2):
+    ''' Returns the rolling sum, max, or min for a list across n periods '''
+
+    # rolling sum
+    if fn == 'sum':
+        rolling_sum = arr.cumsum()
+        rolling_sum[n:] = rolling_sum[n:] - rolling_sum[:-n]
+        rolling_sum[:n] = .000000001
+        return rolling_sum
+
+    # rolling max or rolling min
+    elif fn == 'max' or fn == 'min':
+        shape = (len(arr - n + 1), n)
+        strides = arr.strides * 2
+        arr_strided = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
+        return maxmin(*arr, max_or_min=fn, axis=1)
+
+    else:
+        raise ValueError('Enter "sum", "max", or "min" as fn argument')
+
+
+@pd_series_to_np_array
 def sma(close, n=14):
     ''' Returns the "simple moving average" for a list across n periods'''
 
-    summed = rolling_sum(close, n=n)
+    summed = rolling(close, fn='sum', n=n)
     _sma = summed / n
     return _sma
-
-
-@args_to_dtype(np.array)
-def rolling_sum(close, n=20):
-    ''' Returns the rolling sum for a list across n periods '''
-
-    _rolling_sum = close.cumsum()
-    _rolling_sum[n:] = _rolling_sum[n:] - _rolling_sum[:-n]
-    _rolling_sum[:n] = 0.000000001
-    return _rolling_sum
 
 
 @args_to_dtype(pd.Series)
@@ -90,7 +102,7 @@ def rsi(close, n=14):
 
 
 
-@args_to_dtype(list)
+@pd_series_to_np_array
 def td_sequential(close, n=4):
     ''' Returns the TD sequential of the close '''
 

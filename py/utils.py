@@ -91,7 +91,6 @@ def area_between(line1, line2):
     return np.sum([triangle_area, square_area])
 
 
-@args_to_dtype(list)
 def maxmin(*args, max_or_min=None, axis=0):
     ''' Compare lists and return the max or min value at each index '''
 
