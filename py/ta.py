@@ -1,27 +1,29 @@
 from .wrappers import *
 
 
-@pd_series_to_np_array
-def rolling(*arr, n=2, fn=None, axis=0):
+# @pd_series_to_np_array
+def rolling(arr, n=2, fn=None, axis=0):
     ''' Returns the rolling sum, max, or min for a list across n periods '''
 
     # rolling sum
     if fn == 'sum':
-        rolling_sum = arr.cumsum()
-        rolling_sum[n:] = rolling_sum[n:] - rolling_sum[:-n]
-        rolling_sum[:n] = .000000001
-        return rolling_sum
+
+        _rolling = arr.cumsum()
+        _rolling[n:] = _rolling[n:] - _rolling[:-n]
+        _rolling[:n] = .000000001
+
+        return _rolling
 
     # rolling max, min, or mean
     elif fn in ['max', 'min', 'mean']:
-        shape = (len(arr - n + 1), n)
+
+        shape = (len(arr) - n + 1, n)
         strides = arr.strides * 2
         arr_strided = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
 
-        # rolling_maxmin = np.zeros(arr.shape)
-        # rolling_maxmin[n:] = maxmin(*arr, fn=fn, axis=1)
+        _rolling = np.zeros(arr.shape)
+        _rolling[n-1:] = getattr(np, fn)(arr_strided, axis=axis)
 
-        _rolling = getattr(np, fn)(arr_strided, axis=axis)
         return _rolling
 
     else:
@@ -34,6 +36,7 @@ def sma(close, n=14):
 
     summed = rolling(close, fn='sum', n=n)
     _sma = summed / n
+
     return _sma
 
 
@@ -42,6 +45,7 @@ def ema(line, span=2):
     ''' Returns the "exponential moving average" for a list '''
 
     _ema = line.ewm(span=span, min_periods=1, adjust=False).mean()
+
     return _ema
 
 
@@ -51,6 +55,7 @@ def macd(close, fast=8, slow=21):
     ema_fast = ema(close, fast)
     ema_slow = ema(close, slow)
     _macd = ema_fast - ema_slow
+
     return _macd
 
 
@@ -65,6 +70,7 @@ def atr(high, low, close, n=14):
     #   c. Absolute value of current low - previous close
     true_range = rolling(high - low, abs(high - prev_close), abs(low - prev_close), fn='max', n=1, axis=0)
     _atr = sma(true_range, n)
+
     return _atr
 
 
@@ -74,6 +80,7 @@ def roc(close, n=14):
 
     _roc = np.zeros(close.shape)
     _roc[n:] = np.diff(close, n) / close[:-n] * 100
+
     return _roc
 
 
@@ -157,7 +164,7 @@ def murrey_math_oscillator(close, n=100):
     rng_multiplier = rng * .125
     midline = lowest + rng_multiplier * 4
 
-    _murrey_math_oscillator = np.zeros_like(close)
+    _murrey_math_oscillator = np.zeros(close.shape)
     _murrey_math_oscillator[n-1:] = (close[n-1:] - midline) / rng
 
     return _murrey_math_oscillator
