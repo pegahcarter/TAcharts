@@ -2,7 +2,7 @@ from .wrappers import *
 
 
 # @pd_series_to_np_array
-def rolling(arr, n=2, fn=None, axis=0):
+def rolling(arr, n=2, fn=None, axis=1):
     ''' Returns the rolling sum, max, or min for a list across n periods '''
 
     # rolling sum
@@ -79,7 +79,7 @@ def roc(close, n=14):
     ''' Returns the rate of change in price over n periods '''
 
     _roc = np.zeros(close.shape)
-    _roc[n:] = np.diff(close, n) / close[:-n] * 100
+    _roc[n:] = (np.diff(close, n) ) / close[:-n] * 100
 
     return _roc
 
@@ -164,7 +164,6 @@ def murrey_math_oscillator(close, n=100):
     rng_multiplier = rng * .125
     midline = lowest + rng_multiplier * 4
 
-    _murrey_math_oscillator = np.zeros(close.shape)
-    _murrey_math_oscillator[n-1:] = (close[n-1:] - midline) / rng
+    _murrey_math_oscillator = (close - midline) / rng
 
     return _murrey_math_oscillator
