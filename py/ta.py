@@ -2,13 +2,13 @@ from .wrappers import *
 
 
 # @pd_series_to_np_array
-def rolling(arr, n=2, fn=None, axis=1):
+def rolling(src, n=2, fn=None, axis=1):
     ''' Returns the rolling sum, max, or min for a list across n periods '''
 
     # rolling sum
     if fn == 'sum':
 
-        _rolling = arr.cumsum()
+        _rolling = src.cumsum()
         _rolling[n:] = _rolling[n:] - _rolling[:-n]
         _rolling[:n] = .000000001
 
@@ -17,12 +17,12 @@ def rolling(arr, n=2, fn=None, axis=1):
     # rolling max, min, or mean
     elif fn in ['max', 'min', 'mean']:
 
-        shape = (len(arr) - n + 1, n)
-        strides = arr.strides * 2
-        arr_strided = np.lib.stride_tricks.as_strided(arr, shape=shape, strides=strides)
+        shape = (len(src) - n + 1, n)
+        strides = src.strides * 2
+        src_strided = np.lib.stride_tricks.as_strided(src, shape=shape, strides=strides)
 
-        _rolling = np.zeros(arr.shape)
-        _rolling[n-1:] = getattr(np, fn)(arr_strided, axis=axis)
+        _rolling = np.zeros(src.shape)
+        _rolling[n-1:] = getattr(np, fn)(src_strided, axis=axis)
 
         return _rolling
 
@@ -31,29 +31,29 @@ def rolling(arr, n=2, fn=None, axis=1):
 
 
 @pd_series_to_np_array
-def sma(close, n=14):
+def sma(src, n=14):
     ''' Returns the "simple moving average" for a list across n periods'''
 
-    summed = rolling(close, fn='sum', n=n)
+    summed = rolling(src, fn='sum', n=n)
     _sma = summed / n
 
     return _sma
 
 
 @args_to_dtype(pd.Series)
-def ema(line, span=2):
+def ema(src, n=2):
     ''' Returns the "exponential moving average" for a list '''
 
-    _ema = line.ewm(span=span, min_periods=1, adjust=False).mean()
+    _ema = src.ewm(span=n, min_periods=1, adjust=False).mean()
 
     return _ema
 
 
-def macd(close, fast=8, slow=21):
+def macd(src, fast=8, slow=21):
     ''' Returns the "moving average convergence/divergence" (MACD) '''
 
-    ema_fast = ema(close, fast)
-    ema_slow = ema(close, slow)
+    ema_fast = ema(src, fast)
+    ema_slow = ema(src, slow)
     _macd = ema_fast - ema_slow
 
     return _macd
@@ -75,27 +75,27 @@ def atr(high, low, close, n=14):
 
 
 @pd_series_to_np_array
-def roc(close, n=14):
+def roc(src, n=14):
     ''' Returns the rate of change in price over n periods '''
 
-    _roc = np.zeros(close.shape)
-    _roc[n:] = (np.diff(close, n) ) / close[:-n] * 100
+    _roc = np.zeros(src.shape)
+    _roc[n:] = (np.diff(src, n) ) / src[:-n] * 100
 
     return _roc
 
 
 @args_to_dtype(list)
-def rsi(close, n=14):
+def rsi(src, n=14):
     ''' Returns the "relative strength index", which is used to measure the velocity
     and magnitude of directional price movement. '''
 
-    deltas = np.diff(close)
+    deltas = np.diff(src)
     seed = deltas[:n+1]
     up = seed[seed > 0].sum()/n
     down = -seed[seed < 0].sum()/n
-    _rsi = np.zeros_like(close)
+    _rsi = np.zeros_like(src)
     _rsi[:n] = 100. - 100./(1.+ up/down)
-    for i in range(n, len(close)):
+    for i in range(n, len(src)):
         delta = deltas[i-1]
         if delta > 0:
             up_val = delta
@@ -113,10 +113,10 @@ def rsi(close, n=14):
 
 
 @pd_series_to_np_array
-def td_sequential(close, n=4):
+def td_sequential(src, n=4):
     ''' Returns the TD sequential of the close '''
 
-    old_gt_new = close[:-n] > close[n:]
+    old_gt_new = src[:-n] > src[n:]
     diff_lst = np.diff(old_gt_new)
     diff_lst = np.insert(diff_lst, 0, False)
 
@@ -151,12 +151,12 @@ def chaikin_money_flow(df, n=20):
 
 
 @pd_series_to_np_array
-def murrey_math_oscillator(close, n=100):
+def murrey_math_oscillator(src, n=100):
     ''' Returns the Murrey Math Oscillator of the close '''
 
     # Donchian channel
-    highest = rolling(close, fn='max', n=n)
-    lowest = rolling(close, fn='min', n=n)
+    highest = rolling(src, fn='max', n=n)
+    lowest = rolling(src, fn='min', n=n)
 
     rng = highest - lowest
 
@@ -164,6 +164,6 @@ def murrey_math_oscillator(close, n=100):
     rng_multiplier = rng * .125
     midline = lowest + rng_multiplier * 4
 
-    _murrey_math_oscillator = (close - midline) / rng
+    _murrey_math_oscillator = (src - midline) / rng
 
     return _murrey_math_oscillator
