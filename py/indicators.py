@@ -3,7 +3,7 @@ from .ta import rolling
 
 
 @pd_series_to_np_array
-def td_sequential(src, n=4):
+def td_sequential(src, n=2):
     ''' Returns the TD sequential of the close '''
 
     old_gt_new = src[:-n] > src[n:]
@@ -21,7 +21,7 @@ def td_sequential(src, n=4):
     return _td_sequential
 
 
-def chaikin_money_flow(df, n=20):
+def chaikin_money_flow(df, n=2):
     ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
 
     high = df['high'].values
@@ -41,7 +41,7 @@ def chaikin_money_flow(df, n=20):
 
 
 @pd_series_to_np_array
-def murrey_math_oscillator(src, n=100):
+def murrey_math_oscillator(src, n=2):
     ''' Returns the Murrey Math Oscillator of the close '''
 
     # Donchian channel

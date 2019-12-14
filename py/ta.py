@@ -46,7 +46,7 @@ def ema(src, n=2):
 
     _ema = src.ewm(span=n, min_periods=1, adjust=False).mean()
 
-    return _ema
+    return _ema.values
 
 
 @pd_series_to_np_array

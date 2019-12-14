@@ -1,22 +1,31 @@
 # TA-charts
+### By: Carter Carlson
 
-This repository provides technical tools to analyze OHLCV data, along with several TA chart functionalities.  These functions are optimized for speed and utilize numpy vectorization instead of built-in pandas methods.
+This repository provides technical tools to analyze OHLCV data, along with several TA chart functionalities.  These functions are optimized for speed and utilize numpy vectorization over built-in pandas methods.
 
-TA charting tools:
-* Ichimoku
-* Bollinger Bands
-* Renko
+Basic tools (`ta.py`):
+* `rolling(src, n=2, fn=None, axis=1)`: rolling `sum`, `max`, `min`, or `mean` of `src` across `n` periods
+* `sma(src, n=2)`: simple moving average of `src` across `n` periods
+* `ema(src, n=2)`: exponential moving average for a list of `src` across `n` periods
+* `atr(high, low, close, n=2)`: average true range from candlestick data
+* `roc(src, n=2)`: rate of change of `src` across `n` periods
 
-Technical tools (located in `ta.py`):
-* `sma(close, n=14)`: simple moving average of `close` prices across `n` periods
-* `rolling(close, fn=None, n=20)`: rolling `sum`, `max`, or `min` of `close` prices across `n` periods
-* `ema(close, n=2)`: exponential moving average for a list of `close` prices across `n` periods
-* `macd(close, fast=8, slow=21)`: moving average convergence/divergence of `close` prices
-* `atr(high, low, close, n=14)`: average true range from candlestick `high`, `low`, and `close` prices across `n` periods
-* `roc(close, n=14)`: rate of change of `close` prices across `n` periods
-* `rsi(close, n=14)`: relative strength index of `close` prices across `n` periods
-* `td_sequential(close, n=4)`: TD sequential of `close` prices across `n` periods
-* `chaikin_money_flow(df, n=20)`: Chaikin Money Flow of an OHLCV dataset
+Momentum tools (`momentum.py`):
+* `macd(src, slow=25, fast=13)`: moving average convergence/divergence of `src`
+* `rsi(src, n=2)`: relative strength index of `src` across `n` periods
+  * Used to measure the velocity and magnitude of directional price movement
+* `tsi(src, slow=25, fast=13)`: true strength indicator of `src`
+  * Used to determine overbought/oversold conditions, and warning of trend weakness through divergence
+
+Technical indicators (`indicators.py`):
+* `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
+* `chaikin_money_flow(df, n=2)`: Chaikin Money Flow of an OHLCV dataset
+* `murrey_math_oscillator(src, n=2)`: Murrey Math oscillator of `src`
+
+Chart indicators:
+* `bollinger.py`: Bollinger Bands
+* `ichimoku.py`: Ichimoku Cloud
+* `renko.py`: Renko Chart
 
 Additional tools (located in `utils.py`):
 * `group_candles(df, interval)`: combine candles so instead of needing a different dataset for each time interval, you can form time intervals using more precise data.
@@ -26,8 +35,6 @@ Additional tools (located in `utils.py`):
 * `crossover(x1, x2)`: find all instances of intersections between two lines
 * `intersection(a0, a1, b0, b1)`: find the intersection coordinates between vector A and vector B
 * `area_between(line1, line2)`: find the area between line1 and line2
-* `maxmin(max_or_min, *args)`: compare lists and return the max or min value at each index
-
 
 
 ### How it works
@@ -67,7 +74,7 @@ i.plot()
 from renko import Renko
 
 r = Renko(df)
-r.set_brick_size(auto=True, atr_period=14)
+r.set_brick_size(auto=True, atr_period=2)
 r.build()
 
 r.plot()

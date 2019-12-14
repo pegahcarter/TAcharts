@@ -2,7 +2,7 @@ from .wrappers import *
 from .ta import ema, roc
 
 
-def macd(src, fast=8, slow=21):
+def macd(src, slow=25, fast=13):
     ''' Returns the "moving average convergence/divergence" (MACD) '''
 
     ema_fast = ema(src, fast)
@@ -13,7 +13,7 @@ def macd(src, fast=8, slow=21):
 
 
 @args_to_dtype(list)
-def rsi(src, n=14):
+def rsi(src, n=2):
     ''' Returns the "relative strength index", which is used to measure the velocity
     and magnitude of directional price movement. '''
 
