@@ -1,7 +1,7 @@
 from .wrappers import *
 
 
-# @pd_series_to_np_array
+@pd_series_to_np_array
 def rolling(src, n=2, fn=None, axis=1):
     ''' Returns the rolling sum, max, or min for a list across n periods '''
 
@@ -79,7 +79,7 @@ def roc(src, n=14):
     ''' Returns the rate of change in price over n periods '''
 
     _roc = np.zeros(src.shape)
-    _roc[n:] = (np.diff(src, n) ) / src[:-n] * 100
+    _roc[n:] = (np.diff(src, n) ) / src[:-n]
 
     return _roc
 
@@ -110,6 +110,28 @@ def rsi(src, n=14):
         _rsi[i] = 100. - 100./(1. + up/down)
 
     return _rsi
+
+
+def double_smooth(src, slow=25, fast=13):
+    ''' Returns the smoothed value of two EMAs '''
+    first_smooth = ema(src, n=slow)
+    _double_smooth = ema(first_smooth, n=fast)
+
+    return _double_smooth.values
+
+
+def tsi(src, slow=25, fast=13):
+    ''' Returns the "true strength indicator", which is used to determine overbought
+    and oversold conditions, and warning of trend weakness through divergence. '''
+
+    _roc = roc(src, n=1)
+
+    roc_double_smooth = double_smooth(_roc, slow=slow, fast=fast)
+    roc_double_smooth_abs = double_smooth(abs(_roc), slow=slow, fast=fast)
+
+    _tsi = (roc_double_smooth / roc_double_smooth_abs) * 100
+
+    return _tsi
 
 
 @pd_series_to_np_array
