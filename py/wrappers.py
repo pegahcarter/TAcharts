@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 
 
 def args_to_dtype(dtype):
