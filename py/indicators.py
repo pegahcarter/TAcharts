@@ -10,7 +10,7 @@ def td_sequential(src, n=2):
     diff_lst = np.diff(old_gt_new)
     diff_lst = np.insert(diff_lst, 0, False)
 
-    _td_sequential = [0, 0, 0, 0]
+    _td_sequential = [0, 0]
 
     for diff in diff_lst:
         if not diff:
@@ -35,7 +35,7 @@ def chaikin_money_flow(df, n=2):
     vol_roll = rolling(volume, fn='sum', n=n)
 
     _chaikin_money_flow = avg_roll / vol_roll
-    _chaikin_money_flow[:n] = 0.000000001
+    _chaikin_money_flow[:n] = 0
 
     return _chaikin_money_flow
 
@@ -55,5 +55,6 @@ def murrey_math_oscillator(src, n=2):
     midline = lowest + rng_multiplier * 4
 
     _murrey_math_oscillator = (src - midline) / rng
+    _murrey_math_oscillator[:n] = 0
 
     return _murrey_math_oscillator
