@@ -10,7 +10,7 @@ def rolling(src, n=2, fn=None, axis=1):
 
         _rolling = src.cumsum()
         _rolling[n:] = _rolling[n:] - _rolling[:-n]
-        _rolling[:n] = .000000001
+        _rolling[:n] = 0
 
         return _rolling
 
