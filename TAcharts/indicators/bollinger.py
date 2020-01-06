@@ -1,9 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+
 import matplotlib.dates as mdates
 pd.plotting.register_matplotlib_converters()
 
-from .utils import *
-from .ta import *
-
+# TODO: imports
 
 class Bollinger:
     def __init__(self, close, date=None, period=None):

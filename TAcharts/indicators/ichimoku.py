@@ -1,10 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 pd.plotting.register_matplotlib_converters()
 
+# TODO: fix imports
+
 from .utils import *
 from .ta import *
-
 
 class Ichimoku:
     def __init__(self, df, period=None):
