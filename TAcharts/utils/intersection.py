@@ -1,4 +1,5 @@
-
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
 
 def intersection(a0, a1, b0, b1):
     ''' Return the intersection coordinates between vector A and vector B '''

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+
 import numpy as np
 from .wrappers import pd_series_to_np_array
 

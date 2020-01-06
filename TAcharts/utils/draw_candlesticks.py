@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
