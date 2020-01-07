@@ -10,11 +10,11 @@ class Renko:
         except:
             self.date = df['date']
 
-        self.date = self.date.shift(1).tolist()
+        self.date = self.date.shift(1).values
 
-        self.high = df['high'].tolist()
-        self.low = df['low'].tolist()
-        self.close = df['close'].tolist()
+        self.high = df['high'].values
+        self.low = df['low'].values
+        self.close = df['close'].values
 
 
     def set_brick_size(self, brick_size=None, auto=True, atr_period=14):
