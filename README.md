@@ -10,6 +10,8 @@ Basic tools (`ta.py`):
 * `atr(high, low, close, n=2)`: average true range from candlestick data
 * `roc(src, n=2)`: rate of change of `src` across `n` periods
 
+---
+
 Momentum tools (`momentum.py`):
 * `macd(src, slow=25, fast=13)`: moving average convergence/divergence of `src`
 * `rsi(src, n=2)`: relative strength index of `src` across `n` periods
@@ -17,16 +19,17 @@ Momentum tools (`momentum.py`):
 * `tsi(src, slow=25, fast=13)`: true strength indicator of `src`
   * Used to determine overbought/oversold conditions, and warning of trend weakness through divergence
 
+---
 Technical indicators (`indicators.py`):
 * `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
 * `chaikin_money_flow(df, n=2)`: Chaikin Money Flow of an OHLCV dataset
 * `murrey_math_oscillator(src, n=2)`: Murrey Math oscillator of `src`
-
+---
 Chart indicators:
 * `bollinger.py`: Bollinger Bands
 * `ichimoku.py`: Ichimoku Cloud
 * `renko.py`: Renko Chart
-
+---
 Additional tools (located in `utils.py`):
 * `group_candles(df, interval)`: combine candles so instead of needing a different dataset for each time interval, you can form time intervals using more precise data.
   * Example: you have 15-min candlestick data but want to test a strategy based on 1-hour candlestick data (`interval=4`).
