@@ -11,9 +11,9 @@ import pandas as pd
 import os
 
 
-class Bollinger:
+class bollinger:
 
-    def __init__(self, df, date=None, filename=None, interval=None, n=14):
+    def __init__(self, df, filename=None, interval=None, n=14):
 
         if filename:
             filename_abs_path = f'{os.getcwd()}/{filename}'
