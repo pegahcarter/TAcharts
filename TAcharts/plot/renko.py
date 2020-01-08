@@ -1,25 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+import pandas as pd
 
 
-def plot():
 
-    prices = self.renko['price']
-    directions = self.renko['direction']
-    brick_size = self.brick_price
+def plot(renko, num_bricks=None, signal_indices=None):
 
-    if 'num_bricks' in kwargs:
+    prices = renko['price']
+    directions = renko['direction']
+    brick_size = renko['brick_size']
+
+    # Limits display to a custom sized set
+    if num_bricks:
         prices = prices[-num_bricks:]
         directions = directions[-num_bricks:]
 
-    if 'signal_indices' in kwargs:
-        for x in kwargs.pop('signal_indices'):
-            plt.axvline(x=x)
-
+    if signal_indices:
+        for index in signal_indices:
+            plt.axvline(x=index)
 
     # Create `fig` and `ax`
     fig, ax = plt.subplots(1, figsize=(10, 5))
@@ -59,7 +62,7 @@ def plot():
                 (x+1, y),
                 height=brick_size,
                 width=1,
-                facecolor=facecolor     # Either Green or Red
+                facecolor=facecolor # Either Green or Red
             )  # end of patches.Rectangle
         )   # end of ax.add_patch
 

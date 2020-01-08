@@ -17,15 +17,22 @@ def group_candles(df, interval=4):
     '''
 
     columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-    candles = df[columns].values
-    results = []
-    for i in range(0, len(df)-interval, interval):
-        results.append([
-            candles[i, 0],                      # date
-            candles[i, 1],                      # open
-            candles[i:i+interval, 2].max(),     # high
-            candles[i:i+interval, 3].min(),     # low
-            candles[i+interval, 4],             # close
-            candles[i:i+interval, 5].sum()      # volume
-        ])
-    return pd.DataFrame(results, columns=columns)
+
+    try:
+        candles = df[columns].values
+        results = []
+        for i in range(0, len(df)-interval, interval):
+            results.append([
+                candles[i, 0],                      # date
+                candles[i, 1],                      # open
+                candles[i:i+interval, 2].max(),     # high
+                candles[i:i+interval, 3].min(),     # low
+                candles[i+interval, 4],             # close
+                candles[i:i+interval, 5].sum()      # volume
+            ])
+        return pd.DataFrame(results, columns=columns)
+        
+    # File does not contain all columns needed to group candles
+    except KeyError as e:
+        raise KeyError(f'Column headers not compatable.  You need to have at least \
+                        a "date", "open", "high", "low", "close", and "volume" column')

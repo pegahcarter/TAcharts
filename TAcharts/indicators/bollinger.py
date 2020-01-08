@@ -2,13 +2,13 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from TAcharts.utils.group_candles import group_candles
+
 from .sma import sma
 from .sdev import sdev
 
-from TAcharts.utils.group_candles import group_candles
-
+import pandas as pd
 import os
-
 
 
 class Bollinger:

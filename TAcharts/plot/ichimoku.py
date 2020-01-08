@@ -2,18 +2,28 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from TAcharts.utils.draw_candlesticks import draw_candlesticks
+from TAcharts.utils.demo_df import demo_df
 
-def plot():
+import matplotlib.pyplot as plt
+import pandas as pd
 
+
+def plot(df, ichimkou):
     fig, ax = plt.subplots(figsize=(30,10))
 
-    x = self.df['date']
-    plt.plot(x, self.ichimoku['tenkan'], color='blue')
-    plt.plot(x, self.ichimoku['kijun'], color='maroon')
-    plt.plot(x, self.ichimoku['senkou_a'], color='green', linewidth=0.5)
-    plt.plot(x, self.ichimoku['senkou_b'], color='red', linewidth=0.5)
+    x = df['date']
+    try:
+        x = pd.to_datetime(x)
+    except:
+        x = range(len(df))
 
-    draw_candlesticks(ax, self.df)
+    plt.plot(x, ichimoku['tenkan'], color='blue')
+    plt.plot(x, ichimoku['kijun'], color='maroon')
+    plt.plot(x, ichimoku['senkou_a'], color='green', linewidth=0.5)
+    plt.plot(x, ichimoku['senkou_b'], color='red', linewidth=0.5)
+
+    draw_candlesticks(ax, df)
 
     fig.suptitle('Ichimoku', fontsize=30)
     plt.ylabel('BTC price ($)')
@@ -25,14 +35,14 @@ def plot():
     plt.xticks(rotation=45)
 
     plt.fill_between(
-        x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
-        where=self.ichimoku['senkou_a'] >= self.ichimoku['senkou_b'],
+        x, ichimoku['senkou_a'], ichimoku['senkou_b'],
+        where=ichimoku['senkou_a'] >= ichimoku['senkou_b'],
         facecolor='limegreen',
         interpolate=True
     )
     plt.fill_between(
-        x, self.ichimoku['senkou_a'], self.ichimoku['senkou_b'],
-        where=self.ichimoku['senkou_a'] <= self.ichimoku['senkou_b'],
+        x, ichimoku['senkou_a'], ichimoku['senkou_b'],
+        where=ichimoku['senkou_a'] <= ichimoku['senkou_b'],
         facecolor='salmon',
         interpolate=True
     )

@@ -2,6 +2,8 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from TAcharts.utils.draw_candlesticks import draw_candlesticks
+
 
 def plot(self):
     fig, ax = plt.subplots(1, figsize=(20, 10))
@@ -25,6 +27,6 @@ def plot(self):
 
     fig.suptitle('Bollinger Bands', fontsize=30)
     plt.ylabel('BTC price ($)')
-    plt.legend(['{}MA'.format(self.n)])
+    plt.legend(f'{self.n}MA')
 
     return plt.show()
