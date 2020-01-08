@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
 
+# TODO: imports
 
 def chaikin_money_flow(df, n=2):
     ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''

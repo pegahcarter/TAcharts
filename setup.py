@@ -7,18 +7,20 @@ import setuptools
 
 # Get the long description from the relevant file
 here = os.path.abspath(os.path.dirname(__file__))
-with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as readme:
+with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as readme:
     long_description = readme.read()
+
 
 
 setuptools.setup(
   name = 'TAcharts',
-  packages = ['TAcharts'],
+  # packages = ['TAcharts'],
   version = '0.0.1',
   author = 'Carter Carlson',
   author_email = 'carlfarterson@gmail.com',
   license = 'MIT',
   description = 'TA Charting tool',
+  keywords=['TA', 'mathematics', 'algorithms'],
   long_description=long_description,
   long_description_content_type='text/markdown',
   url = 'https://github.com/carlfarterson/TAcharts',

@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+
+# TODO: imports
+
 @pd_series_to_np_array
 def murrey_math_oscillator(src, n=2):
     ''' Returns the Murrey Math Oscillator of the close '''
