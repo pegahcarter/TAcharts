@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 
-# TODO: imports
+from .rolling import rolling
+from ..wrappers import args_to_dtype
 
+
+@ args_to_dtype(pd.DataFrame)
 def chaikin_money_flow(df, n=2):
     ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
 

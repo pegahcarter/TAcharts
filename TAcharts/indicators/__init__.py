@@ -16,3 +16,9 @@ from .rsi import *
 from .sma import *
 from .td_sequential import *
 from .tsi import *
+
+
+
+from datetime import datetime, timedelta
+import matplotlib.dates as mdates
+pd.plotting.register_matplotlib_converters()
