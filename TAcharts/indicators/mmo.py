@@ -3,11 +3,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from TAcharts.utils.wrappers import pd_series_to_np_array
+
 from .rolling import rolling
 
 
 @pd_series_to_np_array
-def murrey_math_oscillator(src, n=2):
+def mmo(src, n=2):
     ''' Returns the Murrey Math Oscillator of the close '''
 
     # Donchian channel
@@ -20,7 +21,7 @@ def murrey_math_oscillator(src, n=2):
     rng_multiplier = rng * .125
     midline = lowest + rng_multiplier * 4
 
-    _murrey_math_oscillator = (src - midline) / rng
-    _murrey_math_oscillator[:n] = 0
+    _mmo = (src - midline) / rng
+    _mmo[:n] = 0
 
-    return _murrey_math_oscillator
+    return _mmo

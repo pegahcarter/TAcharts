@@ -6,8 +6,8 @@ from .rolling import rolling
 from TAcharts.utils.wrappers import args_to_dtype
 
 
-@ args_to_dtype(pd.DataFrame)
-def chaikin_money_flow(df, n=2):
+@args_to_dtype(pd.DataFrame)
+def cmf(df, n=2):
     ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
 
     high = df['high'].values
