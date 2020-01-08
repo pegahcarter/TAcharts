@@ -16,6 +16,9 @@ __pycache__/
 .Python
 develop-eggs/
 downloads/
+build/*
+*.egg-info/*
+dist/
 eggs/
 .eggs/
 parts/
