@@ -5,6 +5,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from ..wrappers import pd_series_to_np_array
 
 import numpy as np
+from .rolling import rolling
+from .sma import sma
+
+import numpy as np
 
 
 @pd_series_to_np_array

@@ -22,3 +22,6 @@ from .tsi import *
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 pd.plotting.register_matplotlib_converters()
+
+import os
+import requests

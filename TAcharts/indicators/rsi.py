@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from ..wrappers import args_to_dtype
+from .rolling import rolling
 
 import numpy as np
 
-# TODO: finish imports
 
 @args_to_dtype(list)
 def rsi(src, n=2):

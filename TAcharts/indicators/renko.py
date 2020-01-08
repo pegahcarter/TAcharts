@@ -2,44 +2,51 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from TAcharts.utils.demo_df import demo_df
 
+from .atr import atr
 
-from .utils import *
-from .ta import *
+import numpy as np
+import pandas as pd
+import os
 
 
 class Renko:
-    def __init__(self, df, interval=None):
-        try:
-            self.date = pd.to_datetime(df['date'])
-        except:
-            self.date = df['date']
+    def __init__(self, df=None, filename=None, interval=None):
+        if filename:
+            filename_abs_path = f'{os.getcwd()}/{filename}'
+            try:
+                df = pd.read_csv(filename_abs_path)
+            except:
+                raise FileNotFoundError(f'{filename_abs_path}\n\nDoes not exist.')
+        elif df is None:
+            df = demo_df
 
-        self.date = self.date.shift(1).values
+        if interval:
+            df = group_candles(df, interval)
 
-        self.high = df['high'].values
-        self.low = df['low'].values
-        self.close = df['close'].values
+        df['date'] = df['date'].shift(1)
+        self.df = df
 
 
-    def set_brick_size(self, brick_size=None, auto=True, atr_period=14):
+    def set_brick_size(self, brick_size=None, auto=True, atr_interval=14):
         ''' Setting brick size '''
 
-        if len(self.close) < atr_period:
-            raise ValueError('ATR period is longer than historical data.')
+        if len(self.df) < atr_interval:
+            raise ValueError('ATR interval is longer than historical data.')
 
-        self.brick_size = self._optimize_brick_size(auto, brick_size, atr_period)
+        self.brick_size = self._optimize_brick_size(auto, brick_size, atr_interval)
         return self.brick_size
 
 
-    def _optimize_brick_size(self, auto, brick_size, atr_period):
+    def _optimize_brick_size(self, auto, brick_size, atr_interval):
         ''' Helper function to get optimal brick size based on ATR '''
 
         if auto and not brick_size:
-            average_true_range = atr(self.df['high'], self.df['low'], self.df['close'], n=atr_period)
+            average_true_range = atr(self.df['high'], self.df['low'], self.df['close'], n=atr_interval)
             brick_size = np.median(average_true_range)
-
         return brick_size
+
 
     def _apply_renko(self, i):
         ''' Determine if there are any new bricks to paint with current price '''
@@ -73,20 +80,20 @@ class Renko:
         self.renko['index'].append(i)
         self.renko['price'].append(renko_price)
         self.renko['direction'].append(direction)
-        self.renko['date'].append(self.date[i])
+        self.renko['date'].append(self.df['date'].iat[i])
         return
 
 
     def build(self):
         ''' Create Renko data '''
 
-        units = self.close[0] // self.brick_size
+        units = self.df['close'].iat[0] // self.brick_size
         start_price = units * self.brick_size
 
         # Create Genesis block
         self.renko = {
             'index': [0],
-            'date': [self.date[1]],
+            'date': [self.df['date'].iat[0]],
             'price': [start_price],
             'direction': [0]
         }

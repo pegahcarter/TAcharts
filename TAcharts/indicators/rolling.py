@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from ..wrappers import pd_series_to_np_array
+from .rolling import rolling
+
+import pandas as pd
+import numpy as np
+import numpy.lib.stride_tricks as stride_tricks
 
 
 @pd_series_to_np_array
@@ -18,9 +28,9 @@ def rolling(src, n=2, fn=None, axis=1):
 
         shape = (len(src) - n + 1, n)
         strides = src.strides * 2
-        src_strided = np.lib.stride_tricks.as_strided(src, shape=shape, strides=strides)
+        src_strided = stride_tricks.as_strided(src, shape=shape, strides=strides)
 
-        _rolling = np.zeros(src.shape)
+        _rolling = np.zeros_like(src)
         _rolling[n-1:] = getattr(np, fn)(src_strided, axis=axis)
 
         return _rolling

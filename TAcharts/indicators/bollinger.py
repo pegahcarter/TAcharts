@@ -10,9 +10,12 @@ from TAcharts.utils.group_candles import group_candles
 import os
 
 
+
 class Bollinger:
 
     def __init__(self, df, date=None, interval=None):
+
+        self._validate_data(df, n)
 
         self.bollinger = {}
         self.date = date
@@ -22,10 +25,10 @@ class Bollinger:
         self.df = df
 
 
-    def _validate_data(self):
+    def _validate_data(self, df, n):
         ''' Make sure we have more rows of data than the rolling average size '''
 
-        if self.n > len(df['close']):
+        if n > len(df):
             raise AssertionError('Moving average cannot be larger than number of records.')
 
 

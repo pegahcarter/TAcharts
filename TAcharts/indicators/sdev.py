@@ -4,6 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from ..wrappers import args_to_dtype
 
+import pandas as pd
+
 
 @args_to_dtype(pd.Series)
 def sdev(src, n=2):
