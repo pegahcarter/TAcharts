@@ -1,55 +1,66 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
 
-
-def plot_renko(self, num_bricks=None, signal_indices=None):
-
-    fig, ax = plt.subplots(1, figsize=(10, 5))
-
-    if 'num_bricks' in kwargs:
-        pass
-
-    if 'signal_indices' in kwargs:
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 
-    # fig.suptitle("Renko Chart (brick size = {})".format(round(self.brick_size, 2)), fontsize=20)
-    # ax.set_ylabel('Price ($)')
-    # plt.rc('axes', labelsize=20)
-    # plt.rc('font', size=16)
+
+def plot():
 
     prices = self.renko['price']
     directions = self.renko['direction']
+    brick_size = self.brick_price
 
-    if num_bricks is not None:
+    if 'num_bricks' in kwargs:
         prices = prices[-num_bricks:]
         directions = directions[-num_bricks:]
 
-    if signal_indices is not None:
-        for x in signal_indices:
+    if 'signal_indices' in kwargs:
+        for x in kwargs.pop('signal_indices'):
             plt.axvline(x=x)
 
-    # Calculate range for axis
-    ax.set_xlim(0, len(prices) + 1)
-    # ax.set_xlim(0, len(self.renko['price']) + 1)
-    ax.set_ylim(min(prices) - 2*self.brick_size, max(prices) + 2*self.brick_size)
-    # ax.set_ylim(min(self.renko['price']) - 2*self.brick_size, max(self.renko['price']) + 2*self.brick_size)
+
+    # Create `fig` and `ax`
+    fig, ax = plt.subplots(1, figsize=(10, 5))
+
+    # Add title to chart
+    fig.suptitle(f"Renko Chart (brick size = {round(brick_size, 2)})", fontsize=20)
+
+    # Add label to Y-axis
+    ax.set_ylabel('Price ($)')
+
+    plt.rc('axes', labelsize=20)
+    plt.rc('font', size=16)
+
+    # Setup X-axis
+    x_min = 0
+    x_max = len(prices) + 1
+    ax.set_xlim(x_min, x_max)
+
+    # Setup Y-axis
+    y_min = min(prices) - 2 * brick_size
+    y_max = max(prices) + 2 * bricksize
+    ax.set_ylim(y_min, y_max)
 
     # Add bricks to chart
     for x, (price, direction) in enumerate(zip(prices, directions)):
+
+        # Setting brick color and y-position
         if direction == 1:
             facecolor='g'
-            y = price - self.brick_size
+            y = price - brick_size
         else:
-            facecolor='r'
+            facecolor = 'r'
             y = price
 
         ax.add_patch(
-            Rectangle(
+            patches.Rectangle(
                 (x+1, y),
-                height=self.brick_size,
+                height=brick_size,
                 width=1,
-                facecolor=facecolor
-            )
-        )
+                facecolor=facecolor     # Either Green or Red
+            )  # end of patches.Rectangle
+        )   # end of ax.add_patch
 
     return plt.show()
