@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: TAcharts
-Version: 0.0.1
+Version: 0.0.2
 Summary: TA Charting tool
 Home-page: https://github.com/carlfarterson/TAcharts
 Author: Carter Carlson
 Author-email: carlfarterson@gmail.com
 License: MIT
-Download-URL: https://github.com/carlfarterson/TAcharts/archive/v_01.tar.gz
+Download-URL: https://github.com/carlfarterson/TAcharts/archive/v_0.0.1.tar.gz
 Description: # TA-charts
         ### By: Carter Carlson
         
