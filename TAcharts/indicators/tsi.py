@@ -2,7 +2,7 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from TAcharts.wrappers import pd_series_to_np_array
+from TAcharts.wrappers import args_to_dtype
 
 from .roc import roc
 from .double_smooth import double_smooth
