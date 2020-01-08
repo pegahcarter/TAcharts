@@ -46,9 +46,3 @@ def bollinger(df=None, filename=None, interval=None, n=20, ndev=2):
     _bollinger['l_band'] = _bollinger['sma'] - rng
 
     return _bollinger
-
-
-
-df = pd.read_csv('/home/carter/peter-signal/data/binance/BTC-USDT.csv')
-b = bollinger(df)
-print(b)
