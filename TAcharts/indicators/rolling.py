@@ -3,10 +3,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from TAcharts.wrappers import pd_series_to_np_array
-from .rolling import rolling
 
 import pandas as pd
 import numpy as np
+
 import numpy.lib.stride_tricks as stride_tricks
 
 
