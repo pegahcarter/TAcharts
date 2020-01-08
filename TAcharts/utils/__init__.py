@@ -8,4 +8,4 @@ from .draw_candlesticks import draw_candlesticks
 from .fill_values import fill_values
 from .group_candles import group_candles
 from .intersection import intersection
-from .wrappers import *
+from TAcharts.wrappers import *

@@ -31,7 +31,7 @@ def group_candles(df, interval=4):
                 candles[i:i+interval, 5].sum()      # volume
             ])
         return pd.DataFrame(results, columns=columns)
-        
+
     # File does not contain all columns needed to group candles
     except KeyError as e:
         raise KeyError(f'Column headers not compatable.  You need to have at least \

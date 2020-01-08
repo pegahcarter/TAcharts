@@ -2,7 +2,7 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from .wrappers import pd_series_to_np_array
+from TAcharts.wrappers import pd_series_to_np_array
 
 import numpy as np
 
