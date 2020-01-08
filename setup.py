@@ -25,7 +25,7 @@ setuptools.setup(
   long_description_content_type='text/markdown',
   url = 'https://github.com/carlfarterson/TAcharts',
   packages=setuptools.find_packages(),
-  download_url = 'https://github.com/carlfarterson/TAcharts/archive/v_01.tar.gz',
+  download_url = 'https://github.com/carlfarterson/TAcharts/archive/v_0.0.1.tar.gz',
   classifiers=[
     'Development Status :: 3 - Alpha',
     'Programming Language :: Python :: 3',
