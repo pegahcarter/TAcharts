@@ -7,7 +7,7 @@ from . import indicators as indicators
 from . import plot as plot
 from . import utils as utils
 
-from .wrappers import *
+from TAcharts.wrappers import *
 
 import numpy as np
 import pandas as pd
