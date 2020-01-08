@@ -3,7 +3,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from .rolling import rolling
-from TAcharts.utils.wrappers import args_to_dtype
+from TAcharts.wrappers import args_to_dtype
 
 
 @args_to_dtype(pd.DataFrame)

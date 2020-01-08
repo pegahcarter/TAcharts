@@ -1,34 +1,39 @@
-# TA-charts
+# TAcharts
 ### By: Carter Carlson
 
 This repository provides technical tools to analyze OHLCV data, along with several TA chart functionalities.  These functions are optimized for speed and utilize numpy vectorization over built-in pandas methods.
 
-Basic tools (`ta.py`):
-* `rolling(src, n=2, fn=None, axis=1)`: rolling `sum`, `max`, `min`, or `mean` of `src` across `n` periods
-* `sma(src, n=2)`: simple moving average of `src` across `n` periods
-* `ema(src, n=2)`: exponential moving average for a list of `src` across `n` periods
+
+#### indicators
 * `atr(high, low, close, n=2)`: average true range from candlestick data
+* `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger bands for the close of an instrument
+* `cmf(df, n=2)`: Chaikin Money Flow of an OHLCV dataset
+* `double_smooth(src, n_slow, n_fast)`: The smoothed value of two EMAs
+* `ema(src, n=2)`: exponential moving average for a list of `src` across `n` periods
+* `ichimoku(df=None, filename=None, interval=None)`: Ichimoku Cloud
+* `macd(src, slow=25, fast=13)`: moving average convergence/divergence of `src`
+* `mmo(src, n=2)`: Murrey Math oscillator of `src`
+* `renko(df=None, filename=None, interval=None)`: Renko Chart
 * `roc(src, n=2)`: rate of change of `src` across `n` periods
+* `rolling(src, n=2, fn=None, axis=1)`: rolling `sum`, `max`, `min`, or `mean` of `src` across `n` periods
+* `rsi(src, n=2)`: relative strength index of `src` across `n` periods
+* `sdev(src, n=2)`: standard deviation across n periods
+* `sma(src, n=2)`: simple moving average of `src` across `n` periods
+* `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
+* `tsi(src, slow=25, fast=13)`: true strength indicator
+
+
+Basic tools (`ta.py`):
 
 ---
 
 Momentum tools (`momentum.py`):
-* `macd(src, slow=25, fast=13)`: moving average convergence/divergence of `src`
-* `rsi(src, n=2)`: relative strength index of `src` across `n` periods
   * Used to measure the velocity and magnitude of directional price movement
 * `tsi(src, slow=25, fast=13)`: true strength indicator of `src`
   * Used to determine overbought/oversold conditions, and warning of trend weakness through divergence
 
 ---
 Technical indicators (`indicators.py`):
-* `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
-* `chaikin_money_flow(df, n=2)`: Chaikin Money Flow of an OHLCV dataset
-* `murrey_math_oscillator(src, n=2)`: Murrey Math oscillator of `src`
----
-Chart indicators:
-* `bollinger.py`: Bollinger Bands
-* `ichimoku.py`: Ichimoku Cloud
-* `renko.py`: Renko Chart
 ---
 Additional tools (located in `utils.py`):
 * `group_candles(df, interval)`: combine candles so instead of needing a different dataset for each time interval, you can form time intervals using more precise data.

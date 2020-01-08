@@ -11,7 +11,7 @@ import pandas as pd
 import os
 
 
-class Renko:
+class renko:
     def __init__(self, df=None, filename=None, interval=None):
         if filename:
             filename_abs_path = f'{os.getcwd()}/{filename}'

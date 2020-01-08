@@ -2,6 +2,7 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from TAcharts.utils.group_candles import group_candles
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
@@ -10,10 +11,9 @@ import matplotlib.dates as mdates
 import pandas as pd
 
 
+class ichimoku:
 
-class Ichimoku:
-
-    def __init__(self, df=None, filename=None, period=None):
+    def __init__(self, df=None, filename=None, interval=None):
 
         if filename:
             df = pd.read_csv(os.getcwd() + '/' + filename)
@@ -21,20 +21,20 @@ class Ichimoku:
         # Now that we have our df, make all headers lowercase
         df.columns = [col.lower() for col in df]
 
-        if period:
-            df = group_candles(df, period)
+        if interval:
+            df = group_candles(df, interval)
 
         self.df = df
         self.ichimoku = {}
 
-        self._validate_data(period)
+        self._validate_data(interval)
 
 
-    def _validate_data(self, period):
+    def _validate_data(self, interval):
         ''' Make sure we have enough data to form the cloud '''
 
-        if period > len(self.df):
-            raise AssertionError(f'Error: make sure the dataset has more than {period} rows.')
+        if interval > len(self.df):
+            raise AssertionError(f'Error: make sure the dataset has more than {interval} rows.')
 
 
     def _extend_window(self, displacement):
@@ -53,35 +53,35 @@ class Ichimoku:
         return
 
 
-    def _build_spans(self, senkou_b_period, displacement):
+    def _build_spans(self, senkou_b_interval, displacement):
         self.ichimoku['chikou'] = self.df['close'].shift(-displacement)
         self.ichimoku['senkou_a'] = (self.ichimoku['tenkan'] + self.ichimoku['kijun']) / 2
 
-        self._build_lines(senkou_b=senkou_b_period)
+        self._build_lines(senkou_b=senkou_b_interval)
 
         self.ichimoku['senkou_a'] = self.ichimoku['senkou_a'].shift(displacement)
         self.ichimoku['senkou_b'] = self.ichimoku['senkou_b'].shift(displacement)
 
         for indicator in ['tenkan', 'kijun', 'chikou', 'senkou_a', 'senkou_b']:
-            self.ichimoku[indicator] = self.ichimoku[indicator][senkou_b_period+displacement:]
+            self.ichimoku[indicator] = self.ichimoku[indicator][senkou_b_interval+displacement:]
 
-        self.df = self.df[senkou_b_period+displacement:]
+        self.df = self.df[senkou_b_interval+displacement:]
         return
 
 
-    def build(self, tenkan_period, kijun_period, senkou_b_period, displacement):
+    def build(self, tenkan_interval, kijun_interval, senkou_b_interval, displacement):
         ''' Create Ichimoku data '''
 
-        self._validate_data(senkou_b_period)
+        self._validate_data(senkou_b_interval)
         self._extend_window(displacement)
 
-        # Tenkan (conversion line) = (highest high + highest low)/2 for the past x periods
-        # Kijun (base line) = (highest high + lowest low)/2 for the past x*3 periods
-        self._build_lines(tenkan=tenkan_period, kijun=kijun_period)
+        # Tenkan (conversion line) = (highest high + highest low)/2 for the past x intervals
+        # Kijun (base line) = (highest high + lowest low)/2 for the past x*3 intervals
+        self._build_lines(tenkan=tenkan_interval, kijun=kijun_interval)
 
-        # Chikou (lagging span) = Current closing price time-shifted backwards x*3 periods
-        # Senkou span A (leading span A) = (tenkan + kijun)/2 time-shifted forwards x*3 periods
-        # Senkou span B (leading span B) = (highest high + lowest low)/2 for past x*6 periods, shifted forwards x*3 periods
-        self._build_spans(senkou_b_period=senkou_b_period, displacement=displacement)
+        # Chikou (lagging span) = Current closing price time-shifted backwards x*3 intervals
+        # Senkou span A (leading span A) = (tenkan + kijun)/2 time-shifted forwards x*3 intervals
+        # Senkou span B (leading span B) = (highest high + lowest low)/2 for past x*6 intervals, shifted forwards x*3 intervals
+        self._build_spans(senkou_b_interval=senkou_b_interval, displacement=displacement)
 
         return self.ichimoku
