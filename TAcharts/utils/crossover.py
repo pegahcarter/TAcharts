@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
-
-import numpy as np
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from .wrappers import pd_series_to_np_array
+
+import numpy as np
 
 
 @pd_series_to_np_array

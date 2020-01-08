@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
