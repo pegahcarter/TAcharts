@@ -1,9 +1,11 @@
 # TAcharts
 ### By: Carter Carlson
 
-This repository provides technical tools to analyze OHLCV data, along with several TA chart functionalities.  These functions are optimized for speed and utilize numpy vectorization over built-in pandas methods.
+This repository provides technical tools to analyze OHLCV data, along with several
+TA chart functionalities.  These functions are optimized for speed and utilize numpy
+vectorization over built-in pandas methods when possible.
 
-
+---
 #### indicators
 * `atr(high, low, close, n=2)`: average true range from candlestick data
 * `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger bands for the close of an instrument
@@ -22,42 +24,52 @@ This repository provides technical tools to analyze OHLCV data, along with sever
 * `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
 * `tsi(src, slow=25, fast=13)`: true strength indicator
 
-
-Basic tools (`ta.py`):
-
 ---
-
-Momentum tools (`momentum.py`):
-  * Used to measure the velocity and magnitude of directional price movement
-* `tsi(src, slow=25, fast=13)`: true strength indicator of `src`
-  * Used to determine overbought/oversold conditions, and warning of trend weakness through divergence
-
----
-Technical indicators (`indicators.py`):
----
-Additional tools (located in `utils.py`):
-* `group_candles(df, interval)`: combine candles so instead of needing a different dataset for each time interval, you can form time intervals using more precise data.
-  * Example: you have 15-min candlestick data but want to test a strategy based on 1-hour candlestick data (`interval=4`).
+### utils
+* `area_between(line1, line2)`: find the area between line1 and line2
+* `crossover(x1, x2)`: find all instances of intersections between two lines
+* `demo_df`: provide BTC's hourly OHLCV data in case no data is provided
+* `draw_candlesticks(ax, df)`: add candlestick visuals to a matplotlib chart
 * `fill_values(averages, interval, target_len)`: Fill missing values with evenly spaced samples.
   * Example: You're using 15-min candlestick data to find the 1-hour moving average and want a value at every 15-min mark, and not every 1-hour mark.
-* `crossover(x1, x2)`: find all instances of intersections between two lines
+* `group_candles(df, interval=4)`: combine candles so instead of needing a different dataset for each time interval, you can form time intervals using more precise data.
+  * Example: you have 15-min candlestick data but want to test a strategy based on 1-hour candlestick data (`interval=4`).
 * `intersection(a0, a1, b0, b1)`: find the intersection coordinates between vector A and vector B
-* `area_between(line1, line2)`: find the area between line1 and line2
 
+---
+### wrappers
+* `@args_to_dtype(dtype)`: Convert all function arguments to a specific data type
+  ```python
+  from TAcharts.wrappers import args_to_dtype
 
-### How it works
+  # Example: `src` is converted to a list
+  @args_to_dtype(list)
+  def rsi(src, n=2):
+      pass
+  ```
+* `@pd_series_to_np_array`: Convert function arguments from `pd.Series` to `np.array`
+  ```python
+  from TAcharts.wrappers import pd_series_to_np_array
 
+  # Example: `high`, `low`, and `close` are all converted into `np.array` data types
+  @pd_series_to_np_array
+  def atr(high, low, close, n=14):
+      pass
+  ```
+
+---
+## How it works
+#### Create your DataFrame variable
 ```python
-import pandas as pd
-%matplotlib inline
-
 # NOTE: File should contain the columns 'date', 'open', 'high', 'low', and 'close'
+import pandas as pd
 df = pd.read_csv('../Daily.csv')
 ```
 
 #### Bollinger Bands
 ```python
-from bollinger import Bollinger
+from TAcharts.indicators.bollinger import bollinger
+from TAcharts.plot import plot
 
 b = Bollinger(df)
 b.build(n=20)
@@ -67,7 +79,8 @@ b.plot()
 
 #### Ichimoku
 ```python
-from ichimoku import Ichimoku
+from TAcharts.indicators.ichimoku import Ichimoku
+from TAcharts.plot import plot
 
 i = Ichimoku(df)
 i.build(20, 60, 120, 30)
@@ -79,7 +92,9 @@ i.plot()
 
 #### Renko
 ```python
-from renko import Renko
+from TAcharts.indicators.renko import Renko
+from TAcharts.plot import plot
+
 
 r = Renko(df)
 r.set_brick_size(auto=True, atr_period=2)
