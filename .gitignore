@@ -11,19 +11,13 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
 parts/
 sdist/
 var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 MANIFEST
 
 # PyInstaller
