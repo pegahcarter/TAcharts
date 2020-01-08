@@ -1,6 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; py-indent-offset:4 -*-
 import pandas as pd
 import numpy as np
-np.seterr(divide='ignore', invalid='ignore')
 
 
 def args_to_dtype(dtype):

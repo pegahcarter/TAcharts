@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+
 
 from .utils import *
 from .ta import *
 
+
 class Renko:
-    def __init__(self, df):
+    def __init__(self, df, interval=None):
         try:
             self.date = pd.to_datetime(df['date'])
         except:
@@ -32,32 +36,10 @@ class Renko:
         ''' Helper function to get optimal brick size based on ATR '''
 
         if auto and not brick_size:
-            average_true_range = atr(self.high, self.low, self.close, atr_period)
+            average_true_range = atr(self.df['high'], self.df['low'], self.df['close'], n=atr_period)
             brick_size = np.median(average_true_range)
 
         return brick_size
-
-
-    def build(self):
-        ''' Create Renko data '''
-
-        units = self.close[0] // self.brick_size
-        start_price = units * self.brick_size
-
-        # Create Genesis block
-        self.renko = {
-            'index': [0],
-            'date': [self.date[1]],
-            'price': [start_price],
-            'direction': [0]
-        }
-
-        # Run price feed through our renko model
-        for i in range(1, len(self.close)):
-            self._apply_renko(i)
-
-        return
-
 
     def _apply_renko(self, i):
         ''' Determine if there are any new bricks to paint with current price '''
@@ -93,3 +75,24 @@ class Renko:
         self.renko['direction'].append(direction)
         self.renko['date'].append(self.date[i])
         return
+
+
+    def build(self):
+        ''' Create Renko data '''
+
+        units = self.close[0] // self.brick_size
+        start_price = units * self.brick_size
+
+        # Create Genesis block
+        self.renko = {
+            'index': [0],
+            'date': [self.date[1]],
+            'price': [start_price],
+            'direction': [0]
+        }
+
+        # Run price feed through our renko model
+        for i in range(1, len(self.close)):
+            self._apply_renko(i)
+
+        return self.renko

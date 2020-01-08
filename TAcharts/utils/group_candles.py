@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from TAcharts.wrappers import args_to_dtype
 
 import pandas as pd
-import numpy as np
 
 
-def group_candles(df, interval):
+@args_to_dtype(pd.DataFrame)
+def group_candles(df, interval=4):
     ''' Combine candles so instead of needing one dataset for each time interval,
         you can form time intervals using more precise data.
 

@@ -8,3 +8,12 @@ from . import plot as plot
 from . import utils as utils
 
 from .wrappers import *
+
+import numpy as np
+import pandas as pd
+
+# Ignore stupid divide by 0 warnings
+np.seterr(divide='ignore', invalid='ignore')
+
+import matplotlib.dates as mdates
+pd.plotting.register_matplotlib_converters()
