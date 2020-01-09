@@ -15,7 +15,8 @@ def area_between(line1, line2):
     x1 = diff[:-1]
     x2 = diff[1:]
 
-    triangle_area = abs(x2 - x1) * .5
-    square_area = np.amin(zip(x1, x2), axis=1)
+    triangle_area = sum(abs(x2 - x1) * .5)
+    square_area = sum(np.min(zip(x1, x2), axis=1))
+    _area_between = triangle_area + square_area
 
-    return np.sum([triangle_area, square_area])
+    return _area_between
