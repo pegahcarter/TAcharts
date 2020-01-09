@@ -5,7 +5,7 @@ venv/
 *.pyc
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__/*
 *.py[cod]
 *$py.class
 
@@ -14,16 +14,17 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-develop-eggs/
-downloads/
+develop-eggs/*
+downloads/*
 build/*
 *.egg-info/*
-dist/
-eggs/
-.eggs/
-parts/
-sdist/
-var/
+dist/*
+eggs/*
+.eggs/*
+parts/*
+sdist/*
+var/*
+dist/*
 MANIFEST
 
 # PyInstaller
