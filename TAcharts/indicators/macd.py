@@ -12,8 +12,8 @@ import pandas as pd
 def macd(src, slow=25, fast=13):
     ''' Returns the "moving average convergence/divergence" (MACD) '''
 
-    ema_fast = ema(src, fast)
-    ema_slow = ema(src, slow)
-    _macd = ema_fast.values - ema_slow.values
+    ema_fast = ema(src, n=fast)
+    ema_slow = ema(src, n=slow)
+    _macd = ema_fast - ema_slow
 
     return _macd

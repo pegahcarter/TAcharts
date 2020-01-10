@@ -12,19 +12,20 @@ import pandas as pd
 
 class OHLCV:
 
-    path = f'{TAcharts.__path__[0]}/data'
-    url = 'https://raw.githubusercontent.com/carlfarterson/TAcharts/master/data/btc-2019.csv'
 
     def __init__(self, url=None, usecols=None):
         self.url = url
         self.usecols = usecols
-        self._add_2019_hourly_ohlcv()
+        self.btc = pd.read_csv('/home/carter/Documents/TAcharts/data/btc.csv')
 
-    def _add_2019_hourly_ohlcv(self):
-        for csvfile in os.listdir(self.path):
-            coin = csvfile[:csvfile.find('.')]
-            df = pd.read_csv(f'{self.path}/{csvfile}', usecols=self.usecols)
-            setattr(self, coin, df)
+    #     self._add_2019_hourly_ohlcv()
+    #
+    # def _add_2019_hourly_ohlcv(self):
+        # path = f'{TAcharts.__path__[0]}/data'
+    #     for csvfile in os.listdir(self.path):
+    #         coin = csvfile[:csvfile.find('.')]
+    #         df = pd.read_csv(f'{self.path}/{csvfile}', usecols=self.usecols)
+    #         setattr(self, coin, df)
 
 
     def fetch_ohlcv(self, url=None, usecols=None):
@@ -32,4 +33,6 @@ class OHLCV:
         # No url provided means we use our btc price file
         # Fetch prices with URL provided
         content = requests.get(url).content
-        ohlcv = pd.read_csv(io.StringIO(content.decode('utf-8')), usecols=usecols)
+        _fetch_ohlcv = pd.read_csv(io.StringIO(content.decode('utf-8')), usecols=usecols)
+        self.ohlcv = _fetch_ohlcv
+        return _fetch_ohlcv

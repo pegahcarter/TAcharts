@@ -15,4 +15,4 @@ def double_smooth(src, slow=25, fast=13):
     first_smooth = ema(src, n=slow)
     _double_smooth = ema(first_smooth, n=fast)
 
-    return _double_smooth.values
+    return _double_smooth

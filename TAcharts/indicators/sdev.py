@@ -11,5 +11,5 @@ import pandas as pd
 def sdev(src, n=2):
     'Returns the standard deviation of a `src` given `n` periods'
 
-    _sdev = src.rolling(n).std().values
-    return _sdev
+    _sdev = src.rolling(n).std()
+    return _sdev.values

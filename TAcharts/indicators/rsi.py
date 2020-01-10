@@ -3,7 +3,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from TAcharts.wrappers import args_to_dtype
-from .rolling import rolling
 
 import numpy as np
 

@@ -19,8 +19,6 @@ def bollinger(df=None, filename=None, interval=None, n=20, ndev=2):
             df = pd.read_csv(filename_abs_path)
         except:
             raise FileNotFoundError(f'{filename_abs_path}\n\nDoes not exist.')
-    elif df is None:
-        df = demo_df
 
     # Make all columns lowercase
     df.columns = [col.lower() for col in df]
