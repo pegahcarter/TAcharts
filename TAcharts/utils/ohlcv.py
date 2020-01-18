@@ -12,11 +12,12 @@ import pandas as pd
 
 class OHLCV:
 
+    url = 'https://github.com/carlfarterson/TAcharts/data/btc.csv'
 
-    def __init__(self, url=None, usecols=None):
+    def __init__(self, url=url, usecols=None):
         self.url = url
         self.usecols = usecols
-        self.btc = pd.read_csv('/home/carter/Documents/TAcharts/data/btc.csv')
+        self.btc = pd.read_csv('/home/carter/Documents/TAcharts/data/btc.csv', usecols=usecols)
 
     #     self._add_2019_hourly_ohlcv()
     #
