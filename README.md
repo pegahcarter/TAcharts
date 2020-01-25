@@ -1,19 +1,20 @@
 # TAcharts
 ### By: Carter Carlson
 
-This repository provides technical tools to analyze OHLCV data, along with several
+This repository provides technical tools to analyze DOHLCV data, along with several
 TA chart functionalities.  These functions are optimized for speed and utilize numpy
 vectorization over built-in pandas methods when possible.
 
 ## How it works
 #### Create your DataFrame variable
 ```python
-# NOTE: we are using 1-hour BTC OHLCV data from 2019.01.01 00:00:00
-from TAcharts.utils.demo_df import demo_df
+# NOTE: we are using 1-hour BTC DOHLCV data from 2019.01.01 00:00:00
+from TAcharts.DOHLCV import DOHLCV
 
-df = demo_df()
 
-df.head()
+df_btc = DOHLCV().btc
+
+df_btc.head()
 ```
 &nbsp;  |  date | open |	high |	low	| close |	volume
 --------|-------|------|-------|------|-------|--------  
@@ -29,7 +30,7 @@ df.head()
 from TAcharts.indicators.bollinger import bollinger
 from TAcharts.plot import plot
 
-b = Bollinger(df)
+b = Bollinger(df_btc)
 b.build(n=20)
 b.plot()
 ```
@@ -40,7 +41,7 @@ b.plot()
 from TAcharts.indicators.ichimoku import Ichimoku
 from TAcharts.plot import plot
 
-i = Ichimoku(df)
+i = Ichimoku(df_btc)
 i.build(20, 60, 120, 30)
 
 i.plot()
@@ -54,7 +55,7 @@ from TAcharts.indicators.renko import Renko
 from TAcharts.plot import plot
 
 
-r = Renko(df)
+r = Renko(df_btc)
 r.set_brick_size(auto=True, atr_period=2)
 r.build()
 
@@ -88,7 +89,7 @@ r.plot()
 #### indicators
 * `atr(high, low, close, n=2)`: average true range from candlestick data
 * `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger bands for the close of an instrument
-* `cmf(df, n=2)`: Chaikin Money Flow of an OHLCV dataset
+* `cmf(df, n=2)`: Chaikin Money Flow of an DOHLCV dataset
 * `double_smooth(src, n_slow, n_fast)`: The smoothed value of two EMAs
 * `ema(src, n=2)`: exponential moving average for a list of `src` across `n` periods
 * `ichimoku(df=None, filename=None, interval=None)`: Ichimoku Cloud
@@ -107,7 +108,7 @@ r.plot()
 ### utils
 * `area_between(line1, line2)`: find the area between line1 and line2
 * `crossover(x1, x2)`: find all instances of intersections between two lines
-* `demo_df`: provide BTC's hourly OHLCV data in case no data is provided
+* `demo_df`: provide BTC's hourly DOHLCV data in case no data is provided
 * `draw_candlesticks(ax, df)`: add candlestick visuals to a matplotlib chart
 * `fill_values(averages, interval, target_len)`: Fill missing values with evenly
   spaced samples.
