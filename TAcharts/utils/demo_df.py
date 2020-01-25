@@ -1,12 +1,16 @@
 # File to create a quick, easy DataFrame using BTC's hourly 2019 prices
 import requests
 import pandas as pd
+from datetime import datetime
 
 
+def demo_df(url=None):
 
-def demo_df(url=url):
+    if url is None:
+        url = 'https://raw.githubusercontent.com/carlfarterson/TAcharts/master/data/btc.csv'
 
-    url = 'https://raw.githubusercontent.com/carlfarterson/TAcharts/master/data/btc.csv'
-
-    _demo_df = pd.read_csv(url)
-    return _demo_df
+    try:
+        _demo_df = pd.read_csv(url)
+        return _demo_df
+    except:
+        return

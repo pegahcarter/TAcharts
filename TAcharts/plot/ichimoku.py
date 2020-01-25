@@ -3,7 +3,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from TAcharts.utils.draw_candlesticks import draw_candlesticks
-from TAcharts.utils.demo_df import demo_df
 
 import matplotlib.pyplot as plt
 import pandas as pd

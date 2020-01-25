@@ -20,12 +20,18 @@ class renko:
             except:
                 raise FileNotFoundError(f'{filename_abs_path}\n\nDoes not exist.')
         elif df is None:
-            df = demo_df
+            try:
+                df = demo_df()
+            except:
+                return f'Figure out a dataset or connect to the internet, ya goof'
 
+        # Group candles if necessary
         if interval:
             df = group_candles(df, interval)
 
+        # Shift date once to account for close
         df['date'] = df['date'].shift(1)
+        
         self.df = df
 
 
