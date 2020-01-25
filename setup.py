@@ -10,9 +10,10 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as readme:
     long_description = readme.read()
 
+
 setuptools.setup(
   name = 'TAcharts',
-  version = '0.0.11',
+  version = '0.0.13',
   author = 'Carter Carlson',
   author_email = 'carlfarterson@gmail.com',
   license = 'MIT',
