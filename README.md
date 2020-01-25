@@ -9,12 +9,12 @@ vectorization over built-in pandas methods when possible.
 #### Create your DataFrame variable
 ```python
 # NOTE: we are using 1-hour BTC DOHLCV data from 2019.01.01 00:00:00
-from TAcharts.DOHLCV import DOHLCV
+from TAcharts.utils.dohlcv import DOHLCV
 
 
-df_btc = DOHLCV().btc
+btc = DOHLCV().btc
 
-df_btc.head()
+btc.head()
 ```
 &nbsp;  |  date | open |	high |	low	| close |	volume
 --------|-------|------|-------|------|-------|--------  
@@ -30,7 +30,7 @@ df_btc.head()
 from TAcharts.indicators.bollinger import bollinger
 from TAcharts.plot import plot
 
-b = Bollinger(df_btc)
+b = Bollinger(btc)
 b.build(n=20)
 b.plot()
 ```
@@ -41,7 +41,7 @@ b.plot()
 from TAcharts.indicators.ichimoku import Ichimoku
 from TAcharts.plot import plot
 
-i = Ichimoku(df_btc)
+i = Ichimoku(btc)
 i.build(20, 60, 120, 30)
 
 i.plot()
@@ -55,7 +55,7 @@ from TAcharts.indicators.renko import Renko
 from TAcharts.plot import plot
 
 
-r = Renko(df_btc)
+r = Renko(btc)
 r.set_brick_size(auto=True, atr_period=2)
 r.build()
 
