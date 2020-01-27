@@ -11,7 +11,7 @@ import pandas as pd
 
 @args_to_dtype(pd.DataFrame)
 def cmf(df, n=2):
-    ''' Returns the Chaikin Money Flow of a DOHLCV dataframe'''
+    ''' Returns the Chaikin Money Flow of a OHLCV dataframe'''
 
     high = df['high'].values
     low = df['low'].values
