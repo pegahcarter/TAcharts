@@ -34,7 +34,8 @@ b = Bollinger(btc)
 b.build(n=20)
 b.plot()
 ```
-![png](img/bollinger.PNG)
+
+![bollinger](https://github.com/carlfarterson/TAcharts/tree/master/img/bollinger.PNG)
 
 #### Ichimoku
 ```python
@@ -47,7 +48,7 @@ i.build(20, 60, 120, 30)
 i.plot()
 ```
 
-![png](img/ichimoku.PNG)
+![ichimoku](https://github.com/carlfarterson/TAcharts/tree/master/img/ichimoku.PNG)
 
 
 #### Renko
@@ -62,7 +63,8 @@ r.build()
 
 r.plot()
 ```
-![png](img/renko.PNG)
+
+![renko](https://github.com/carlfarterson/TAcharts/tree/master/img/renko.PNG)
 
 ---
 
