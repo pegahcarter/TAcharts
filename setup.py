@@ -13,7 +13,7 @@ with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as readme:
 
 setuptools.setup(
   name = 'TAcharts',
-  version = '0.0.15',
+  version = '0.0.16',
   author = 'Carter Carlson',
   author_email = 'carlfarterson@gmail.com',
   license = 'MIT',
