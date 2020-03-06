@@ -1,4 +1,4 @@
-# TAcharts 0.0.16
+# TAcharts 0.0.17
 ### By: Carter Carlson
 
 This repository provides technical tools to analyze OHLCV data, along with several
@@ -7,7 +7,7 @@ vectorization over built-in pandas methods when possible.
 
 ### Methods
 #### Indicators With Chart Functionality
-* `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger bands for the close of an instrument
+* `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger Bands
 * `ichimoku(df=None, filename=None, interval=None)`: Ichimoku Cloud
 * `renko(df=None, filename=None, interval=None)`: Renko Chart
 
@@ -27,10 +27,10 @@ vectorization over built-in pandas methods when possible.
 * `td_sequential(src, n=2)`: TD sequential of `src` across `n` periods
 * `tsi(src, slow=25, fast=13)`: true strength indicator
 
+
 #### utils
 * `area_between(line1, line2)`: find the area between line1 and line2
 * `crossover(x1, x2)`: find all instances of intersections between two lines
-* `demo_df`: provide BTC's hourly OHLCV data in case no data is provided
 * `draw_candlesticks(ax, df)`: add candlestick visuals to a matplotlib chart
 * `fill_values(averages, interval, target_len)`: Fill missing values with evenly
   spaced samples.
@@ -46,12 +46,11 @@ vectorization over built-in pandas methods when possible.
 
 ---
 
-## How it works
-#### Create your DataFrame variable
+### How it works
+#### Create your DataFrame
 ```python
-# NOTE: we are using 1-hour BTC OHLCV data from 2019.01.01 00:00:00
+# NOTE: we are using 1-hour BTC OHLCV data from 2019.01.01 00:00:00 to 2019.12.31 23:00:00
 from TAcharts.utils.ohlcv import OHLCV
-
 
 btc = OHLCV().btc
 
@@ -109,8 +108,9 @@ r.plot()
 
 ---
 
-### wrappers
+#### wrappers
 * `@args_to_dtype(dtype)`: Convert all function arguments to a specific data type
+
   ```python
   from TAcharts.wrappers import args_to_dtype
 
@@ -119,7 +119,9 @@ r.plot()
   def rsi(src, n=2):
       pass
   ```
-* `@pd_series_to_np_array`: Convert function arguments from `pd.Series` to `np.array`
+
+* `@pd_series_to_np_array`: Convert function arguments from `pd.Series` to `np.array` using `pd.Series.values`.  This wrapper is 10x quicker than using `@args_to_dtype(np.array)` when working with Pandas series.
+
   ```python
   from TAcharts.wrappers import pd_series_to_np_array
 
@@ -128,4 +130,3 @@ r.plot()
   def atr(high, low, close, n=14):
       pass
   ```
----
