@@ -16,8 +16,10 @@ def rsi(src, n=2):
     seed = deltas[:n+1]
     up = seed[seed > 0].sum()/n
     down = -seed[seed < 0].sum()/n
+
     _rsi = np.zeros_like(src)
     _rsi[:n] = 100. - 100./(1.+ up/down)
+
     for i in range(n, len(src)):
         delta = deltas[i-1]
         if delta > 0:
