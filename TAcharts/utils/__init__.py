@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from .area_between import area_between
+from .apply_across import apply_across
 from .crossover import crossover
 from .draw_candlesticks import draw_candlesticks
 from .fill_values import fill_values
