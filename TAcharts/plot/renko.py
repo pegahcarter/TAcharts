@@ -8,12 +8,11 @@ import matplotlib.patches as patches
 import pandas as pd
 
 
-
 def plot(renko, num_bricks=None, signal_indices=None):
 
-    prices = renko['price']
-    directions = renko['direction']
-    brick_size = renko['brick_size']
+    prices = renko["price"]
+    directions = renko["direction"]
+    brick_size = renko["brick_size"]
 
     # Limits display to a custom sized set
     if num_bricks:
@@ -31,10 +30,10 @@ def plot(renko, num_bricks=None, signal_indices=None):
     fig.suptitle(f"Renko Chart (brick size = {round(brick_size, 2)})", fontsize=20)
 
     # Add label to Y-axis
-    ax.set_ylabel('Price ($)')
+    ax.set_ylabel("Price ($)")
 
-    plt.rc('axes', labelsize=20)
-    plt.rc('font', size=16)
+    plt.rc("axes", labelsize=20)
+    plt.rc("font", size=16)
 
     # Setup X-axis
     x_min = 0
@@ -51,19 +50,19 @@ def plot(renko, num_bricks=None, signal_indices=None):
 
         # Setting brick color and y-position
         if direction == 1:
-            facecolor='g'
+            facecolor = "g"
             y = price - brick_size
         else:
-            facecolor = 'r'
+            facecolor = "r"
             y = price
 
         ax.add_patch(
             patches.Rectangle(
-                (x+1, y),
+                (x + 1, y),
                 height=brick_size,
                 width=1,
-                facecolor=facecolor # Either Green or Red
+                facecolor=facecolor,  # Either Green or Red
             )  # end of patches.Rectangle
-        )   # end of ax.add_patch
+        )  # end of ax.add_patch
 
     return plt.show()

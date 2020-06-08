@@ -9,16 +9,16 @@ from .rolling import rolling
 
 @pd_series_to_np_array
 def mmo(src, n=2):
-    ''' Returns the Murrey Math Oscillator of the close '''
+    """ Returns the Murrey Math Oscillator of the close """
 
     # Donchian channel
-    highest = rolling(src, fn='max', n=n)
-    lowest = rolling(src, fn='min', n=n)
+    highest = rolling(src, fn="max", n=n)
+    lowest = rolling(src, fn="min", n=n)
 
     rng = highest - lowest
 
     # Oscillator
-    rng_multiplier = rng * .125
+    rng_multiplier = rng * 0.125
     midline = lowest + rng_multiplier * 4
 
     _mmo = (src - midline) / rng

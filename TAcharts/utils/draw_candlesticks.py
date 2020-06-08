@@ -10,37 +10,38 @@ from matplotlib.dates import date2num
 
 
 def draw_candlesticks(ax, df):
-    ''' Add candlestick visuals to a matplotlib graph '''
+    """ Add candlestick visuals to a matplotlib graph """
 
-    df = df[['date', 'open', 'high', 'low', 'close']].dropna()
+    df = df[["date", "open", "high", "low", "close"]].dropna()
     lines = []
     patches = []
 
     for i, (date, _open, high, low, close) in df.iterrows():
         date = date2num(date)
         if close >= _open:
-            color = 'g'
+            color = "g"
             lower = _open
             height = close - _open
         else:
-            color = 'r'
+            color = "r"
             lower = close
             height = _open - close
 
         vline = Line2D(
-            xdata=(date, date), ydata=(low, high),
+            xdata=(date, date),
+            ydata=(low, high),
             color=color,
             linewidth=0.5,
-            antialiased=True
+            antialiased=True,
         )
 
         rect = Rectangle(
-            xy=(date - .4, lower),
+            xy=(date - 0.4, lower),
             width=0.8,
             height=height,
             facecolor=color,
             edgecolor=color,
-            alpha=1.0
+            alpha=1.0,
         )
 
         lines.append(vline)

@@ -9,7 +9,7 @@ import pandas as pd
 
 @args_to_dtype(pd.Series)
 def sdev(src, n=2):
-    'Returns the standard deviation of a `src` given `n` periods'
+    "Returns the standard deviation of a `src` given `n` periods"
 
     _sdev = src.rolling(n).std()
     return _sdev.values

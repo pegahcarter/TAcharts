@@ -12,8 +12,8 @@ import pandas as pd
 
 @args_to_dtype(pd.Series)
 def tsi(src, slow=25, fast=13):
-    ''' Returns the "true strength indicator", which is used to determine overbought
-    and oversold conditions, and warning of trend weakness through divergence. '''
+    """ Returns the "true strength indicator", which is used to determine overbought
+    and oversold conditions, and warning of trend weakness through divergence. """
 
     _roc = roc(src, n=1)
 

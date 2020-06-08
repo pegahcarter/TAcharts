@@ -10,7 +10,7 @@ import pandas as pd
 
 @args_to_dtype(pd.Series)
 def macd(src, slow=25, fast=13):
-    ''' Returns the "moving average convergence/divergence" (MACD) '''
+    """ Returns the "moving average convergence/divergence" (MACD) """
 
     ema_fast = ema(src, n=fast)
     ema_slow = ema(src, n=slow)

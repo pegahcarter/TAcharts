@@ -12,9 +12,9 @@ def apply_across(*args, fn=None):
     # Apply function across every `i` index for multiple lists
 
     if len(args) <= 0:
-        raise StandardError('Enter more than one argument.')
+        raise StandardError("Enter more than one argument.")
     elif fn == None:
-        raise ValueError('Enter a function name.')
+        raise ValueError("Enter a function name.")
 
     applied_across = getattr(np, fn)(args, axis=0)
 

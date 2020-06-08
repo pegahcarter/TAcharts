@@ -9,7 +9,7 @@ import numpy as np
 
 @pd_series_to_np_array
 def td_sequential(src, n=2):
-    ''' Returns the TD sequential of the close '''
+    """ Returns the TD sequential of the close """
 
     old_gt_new = src[:-n] > src[n:]
     diff_lst = np.diff(old_gt_new)

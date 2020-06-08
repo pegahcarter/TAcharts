@@ -7,7 +7,7 @@ from datetime import datetime
 def demo_df(url=None):
 
     if url is None:
-        url = 'https://raw.githubusercontent.com/carlfarterson/TAcharts/master/data/btc.csv'
+        url = "https://raw.githubusercontent.com/carlfarterson/TAcharts/master/data/btc.csv"
 
     try:
         _demo_df = pd.read_csv(url)

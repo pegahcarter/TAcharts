@@ -9,7 +9,7 @@ import numpy as np
 
 @pd_series_to_np_array
 def crossover(x1, x2):
-    ''' Find all instances of intersections between two lines '''
+    """ Find all instances of intersections between two lines """
 
     x1_gt_x2 = x1 > x2
     cross = np.diff(x1_gt_x2)
