@@ -3,21 +3,27 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from TAcharts.utils.group_candles import group_candles
+from TAcharts.utils.draw_candlesticks import draw_candlesticks
 
 from .sma import sma
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 
+import matplotlib.pyplot as plt
 
 import pandas as pd
 
 
-class ichimoku:
+class Ichimoku:
     def __init__(self, df=None, filename=None, interval=None):
 
         if filename:
-            df = pd.read_csv(os.getcwd() + "/" + filename)
+            filename_abs_path = f"{os.getcwd()}/{filename}"
+            try:
+                df = pd.read_csv(filename_abs_path)
+            except:
+                raise FileNotFoundError(f"{filename_abs_path}\n\nDoes not exist.")
 
         # Now that we have our df, make all headers lowercase
         df.columns = [col.lower() for col in df]
@@ -91,3 +97,46 @@ class ichimoku:
         )
 
         return self.ichimoku
+
+    def plot(self):
+        fig, ax = plt.subplots(figsize=(30, 10))
+
+        x = self.df["date"]
+        try:
+            x = pd.to_datetime(x)
+        except:
+            x = range(len(self.df))
+
+        plt.plot(x, self.ichimoku["tenkan"], color="blue")
+        plt.plot(x, self.ichimoku["kijun"], color="maroon")
+        plt.plot(x, self.ichimoku["senkou_a"], color="green", linewidth=0.5)
+        plt.plot(x, self.ichimoku["senkou_b"], color="red", linewidth=0.5)
+
+        draw_candlesticks(ax, self.df)
+
+        fig.suptitle("Ichimoku", fontsize=30)
+        plt.ylabel("BTC price ($)")
+        plt.rc("axes", labelsize=20)
+        plt.rc("font", size=18)
+
+        ax.xaxis.set_major_locator(mdates.MonthLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%y"))
+        plt.xticks(rotation=45)
+
+        plt.fill_between(
+            x,
+            self.ichimoku["senkou_a"],
+            self.ichimoku["senkou_b"],
+            where=self.ichimoku["senkou_a"] >= self.ichimoku["senkou_b"],
+            facecolor="limegreen",
+            interpolate=True,
+        )
+        plt.fill_between(
+            x,
+            self.ichimoku["senkou_a"],
+            self.ichimoku["senkou_b"],
+            where=self.ichimoku["senkou_a"] <= self.ichimoku["senkou_b"],
+            facecolor="salmon",
+            interpolate=True,
+        )
+        return plt.show()

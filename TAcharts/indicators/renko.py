@@ -6,12 +6,15 @@ from TAcharts.utils.demo_df import demo_df
 
 from .atr import atr
 
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
 import numpy as np
 import pandas as pd
 import os
 
 
-class renko:
+class Renko:
     def __init__(self, df=None, filename=None, interval=None):
         if filename:
             filename_abs_path = f"{os.getcwd()}/{filename}"
@@ -109,3 +112,62 @@ class renko:
             self._apply_renko(i)
 
         return self.renko
+
+    def plot(self, num_bricks=None, signal_indices=None):
+
+        prices = self.renko["price"]
+        directions = self.renko["direction"]
+        brick_size = self.renko["brick_size"]
+
+        # Limits display to a custom sized set
+        if num_bricks:
+            prices = prices[-num_bricks:]
+            directions = directions[-num_bricks:]
+
+        if signal_indices:
+            for index in signal_indices:
+                plt.axvline(x=index)
+
+        # Create `fig` and `ax`
+        fig, ax = plt.subplots(1, figsize=(10, 5))
+
+        # Add title to chart
+        fig.suptitle(f"Renko Chart (brick size = {round(brick_size, 2)})", fontsize=20)
+
+        # Add label to Y-axis
+        ax.set_ylabel("Price ($)")
+
+        plt.rc("axes", labelsize=20)
+        plt.rc("font", size=16)
+
+        # Setup X-axis
+        x_min = 0
+        x_max = len(prices) + 1
+        ax.set_xlim(x_min, x_max)
+
+        # Setup Y-axis
+        y_min = min(prices) - 2 * brick_size
+        y_max = max(prices) + 2 * brick_size
+        ax.set_ylim(y_min, y_max)
+
+        # Add bricks to chart
+        for x, (price, direction) in enumerate(zip(prices, directions)):
+
+            # Setting brick color and y-position
+            if direction == 1:
+                facecolor = "g"
+                y = price - brick_size
+            else:
+                facecolor = "r"
+                y = price
+
+            ax.add_patch(
+                patches.Rectangle(
+                    (x + 1, y),
+                    height=brick_size,
+                    width=1,
+                    facecolor=facecolor,  # Either Green or Red
+                )  # end of patches.Rectangle
+            )  # end of ax.add_patch
+
+        return plt.show()
