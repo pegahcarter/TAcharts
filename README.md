@@ -52,9 +52,9 @@ vectorization over built-in pandas methods when possible.
 # NOTE: we are using 1-hour BTC OHLCV data from 2019.01.01 00:00:00 to 2019.12.31 23:00:00
 from TAcharts.utils.ohlcv import OHLCV
 
-btc = OHLCV().btc
+df = OHLCV().btc
 
-btc.head()
+df.head()
 ```
 &nbsp;  |  date | open |	high |	low	| close |	volume
 --------|-------|------|-------|------|-------|--------  
@@ -67,11 +67,11 @@ btc.head()
 
 #### Bollinger Bands
 ```python
-from TAcharts.indicators.bollinger import bollinger
-from TAcharts.plot import plot
+from TAcharts.indicators.bollinger import Bollinger
 
-b = Bollinger(btc)
-b.build(n=20)
+b = Bollinger(df)
+b.build(n=20, ndev=2)
+
 b.plot()
 ```
 
@@ -80,9 +80,8 @@ b.plot()
 #### Ichimoku
 ```python
 from TAcharts.indicators.ichimoku import Ichimoku
-from TAcharts.plot import plot
 
-i = Ichimoku(btc)
+i = Ichimoku(df)
 i.build(20, 60, 120, 30)
 
 i.plot()
@@ -94,10 +93,8 @@ i.plot()
 #### Renko
 ```python
 from TAcharts.indicators.renko import Renko
-from TAcharts.plot import plot
 
-
-r = Renko(btc)
+r = Renko(df)
 r.set_brick_size(auto=True, atr_period=2)
 r.build()
 
