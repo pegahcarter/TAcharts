@@ -8,11 +8,14 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.dates import date2num
 
+import pandas as pd
 
 def draw_candlesticks(ax, df):
     """ Add candlestick visuals to a matplotlib graph """
 
     df = df[["date", "open", "high", "low", "close"]].dropna()
+    df['date'] = pd.to_datetime(df['date'])
+
     lines = []
     patches = []
 

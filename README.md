@@ -1,4 +1,4 @@
-# TAcharts 0.0.22
+# TAcharts 0.0.23
 ### By: Carter Carlson
 
 This repository provides technical tools to analyze OHLCV data, along with several
@@ -7,9 +7,9 @@ vectorization over built-in pandas methods when possible.
 
 ### Methods
 #### Indicators With Chart Functionality
-* `bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger Bands
-* `ichimoku(df=None, filename=None, interval=None)`: Ichimoku Cloud
-* `renko(df=None, filename=None, interval=None)`: Renko Chart
+* `Bollinger(df=None, filename=None, interval=None, n=20, ndev=2)`: Bollinger Bands
+* `Ichimoku(df=None, filename=None, interval=None)`: Ichimoku Cloud
+* `Renko(df=None, filename=None, interval=None)`: Renko Chart
 
 
 #### Indicators Without Chart Functionality
