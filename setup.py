@@ -15,7 +15,7 @@ setuptools.setup(
 
   name='TAcharts',
 
-  version='0.0.21',
+  version='0.0.22',
 
   author='Carter Carlson',
 
