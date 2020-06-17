@@ -1,4 +1,4 @@
-# TAcharts 0.0.23
+# TAcharts 0.0.24
 ### By: Carter Carlson
 
 This repository provides technical tools to analyze OHLCV data, along with several
