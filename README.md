@@ -1,5 +1,5 @@
 # TAcharts 0.0.24
-### By: Carter Carlson
+### By: Carl Farterson
 
 This repository provides technical tools to analyze OHLCV data, along with several
 TA chart functionalities.  These functions are optimized for speed and utilize numpy
