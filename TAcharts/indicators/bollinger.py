@@ -36,7 +36,7 @@ class Bollinger:
     def _validate_data(self, interval):
         """ Make sure we have enough data """
 
-        if interval > len(self.df):
+        if interval and interval > len(self.df):
             raise AssertionError(
                 f"Error: make sure the dataset has more than {interval} rows."
             )
