@@ -1,4 +1,4 @@
-# TAcharts 0.0.25
+# TAcharts 0.0.26
 ### By: Carl Farterson
 
 This repository provides technical tools to analyze OHLCV data, along with several
@@ -95,7 +95,7 @@ i.plot()
 from TAcharts.indicators.renko import Renko
 
 r = Renko(df)
-r.set_brick_size(auto=True, atr_period=2)
+r.set_brick_size(auto=True, atr_interval=2)
 r.build()
 
 r.plot()
