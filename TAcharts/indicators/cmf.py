@@ -13,6 +13,11 @@ import pandas as pd
 def cmf(df, n=2):
     """ Returns the Chaikin Money Flow of a OHLCV dataframe"""
 
+    # Ensure we have all columns
+    for col in ["high", "low", "close", "volume"]:
+        if col not in df.columns:
+            raise LookupError("Missing columns.  Make sure you have a 'high', 'low', 'close', and 'volume' column in your DataFrame.")
+
     high = df["high"].values
     low = df["low"].values
     close = df["close"].values
