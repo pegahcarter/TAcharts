@@ -5,10 +5,11 @@ import TAcharts
 import os
 import pandas as pd
 
+DOWNLOAD_URL = "https://raw.githubusercontent.com/carlfarterson/TAcharts/master/ohlcv"
+
 
 class OHLCV:
 
-    baseurl = "https://raw.githubusercontent.com/carlfarterson/TAcharts/master/ohlcv"
     coins = ["btc", "eth", "ethusd", "xrp", "ltc", "eos", "ada"]
 
     # Check if we have already pulled the price data and saved it locally
@@ -27,8 +28,9 @@ class OHLCV:
     # Download 1-hour CSV OHLCV files for 2019
     def fetch_OHLCV(self):
         # Create data directory first
+        df = pd.read_csv(f"{DOWNLOAD_URL}/{coin}.csv")
         os.mkdir(self.basepath)
+
         # Fetch OHLCV data for each coin and save it locally
         for coin in self.coins:
-            df = pd.read_csv(f"{self.baseurl}/{coin}.csv")
             df.to_csv(f"{self.basepath}/{coin}.csv", index=False)
