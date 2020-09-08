@@ -7,8 +7,7 @@ import pandas as pd
 
 DOWNLOAD_URL = "https://raw.githubusercontent.com/carlfarterson/TAcharts/master/ohlcv"
 COINS = ["btc", "eth", "ethusd", "xrp", "ltc", "eos", "ada"]
-BASEPATH = TAcharts.__path__[0] + "/ohlcv"
-
+BASEPATH = f"{TAcharts.__path__[0]}/ohlcv"
 
 class OHLCV:
 
