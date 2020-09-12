@@ -15,7 +15,7 @@ class OHLCV:
     def __init__(self, usecols=None):
 
         # If we have not yet saved OHLCV prices locally, fetch them from github
-        if "ohlcv" not in os.listdir(self.basepath):
+        if not os.path.isdir(self.basepath):
             self.fetch_OHLCV()
 
         # Now that we have OHLCV prices saved, fetch them and set themn to ourself
@@ -25,10 +25,11 @@ class OHLCV:
 
     # Download 1-hour CSV OHLCV files for 2019
     def fetch_OHLCV(self):
+        
         # Create data directory first
-        df = pd.read_csv(f"{DOWNLOAD_URL}/{coin}.csv")
         os.mkdir(self.basepath)
 
         # Fetch OHLCV data for each coin and save it locally
         for coin in self.coins:
+            df = pd.read_csv(f"{DOWNLOAD_URL}/{coin}.csv")
             df.to_csv(f"{self.basepath}/{coin}.csv", index=False)
