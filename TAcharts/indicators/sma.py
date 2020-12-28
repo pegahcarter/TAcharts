@@ -8,10 +8,9 @@ from .rolling import rolling
 
 
 @pd_series_to_np_array
-def sma(src, n=2):
+def sma(src, n=2, fn="sum"):
     """ Returns the "simple moving average" for a list across n periods"""
-
-    summed = rolling(src, fn="sum", n=n)
+    summed = rolling(src, fn=fn, n=n)
     _sma = summed / n
 
     return _sma
