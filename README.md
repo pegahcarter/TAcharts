@@ -1,5 +1,8 @@
-# TAcharts 0.0.27
+# TAcharts 0.0.28
 ### By: Carl Farterson
+##### Contributors: [@rnarciso](https://github.com/rnarciso), [@t3ch9](https://github.com/t3ch9)
+
+
 
 This repository provides technical tools to analyze OHLCV data, along with several
 TA chart functionalities.  These functions are optimized for speed and utilize numpy

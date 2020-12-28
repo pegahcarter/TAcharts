@@ -5,17 +5,31 @@ import os.path
 import codecs
 import setuptools
 
-# Get the long description from the relevant file
-here = os.path.abspath(os.path.dirname(__file__))
-with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as readme:
-    long_description = readme.read()
+keywords = [
+  'TA',
+  'technical-analysis',
+  'mathematics',
+  'algorithms',
+  'trading',
+  'statistics',
+  'crypto',
+  'cryptocurrency',
+  'ohlc',
+  'ohlcv'
+]
 
+long_description = "Apply popular TA tools and charts to candlestick data with NumPy."
+
+contributors = [
+  '@rnarciso',
+  '@t3ch9'
+]
 
 setuptools.setup(
 
   name='TAcharts',
 
-  version='0.0.27',
+  version='0.0.28',
 
   author='Carl Farterson',
 
@@ -25,7 +39,7 @@ setuptools.setup(
 
   description='TA Charting tool',
 
-  keywords=['TA', 'mathematics', 'algorithms'],
+  keywords=keywords,
 
   long_description=long_description,
 
