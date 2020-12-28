@@ -25,7 +25,11 @@ def pd_series_to_np_array(fn):
     10x quicker than np.array(pd.Series) """
 
     def wrapper(*args, **kwargs):
-        args = [pd.Series(x).values if type(x) != pd.Series else x.values for x in args]
-        return fn(*args, **kwargs)
+       if type(args[0]) is pd.Series:
+            oldSeries = args[0].copy()
+        else:
+            oldSeries = None
+        args = tuple(x if type(x) != pd.Series else args[0].to_numpy(na_value=0) for x in args)
+        return pd.Series(data=fn(*args, **kwargs), index=oldSeries.index) if oldSeries is not None else fn(*args, **kwargs)
 
     return wrapper
