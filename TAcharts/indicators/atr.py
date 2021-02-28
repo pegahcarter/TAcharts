@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 
+@pd_series_to_np_array
 def atr(high, low, close, n=14):
     """ Returns the average true range from candlestick data """
 
