@@ -30,41 +30,41 @@ contributors = [
 
 setuptools.setup(
 
-  name='TAcharts',
+    name='TAcharts',
 
-  version='0.0.29',
+    version='0.0.30',
 
-  author='Carl Farterson',
+    author='Carl Farterson',
 
-  author_email='carlfarterson@gmail.com',
+    author_email='carlfarterson@gmail.com',
 
-  license='MIT',
+    license='MIT',
 
-  description='TA Charting tool',
+    description='TA Charting tool',
 
-  keywords=keywords,
+    keywords=keywords,
 
-  long_description=long_description,
+    long_description=long_description,
 
-  long_description_content_type='text/markdown',
+    long_description_content_type='text/markdown',
 
-  url='https://github.com/carlfarterson/TAcharts',
+    url='https://github.com/carlfarterson/TAcharts',
 
-  packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(),
 
-  install_requires=[
-    'pandas>=0.21.0',
-    'numpy>=1.0.0',
-    'matplotlib>=2.0.0'
-  ],
+    install_requires=[
+        'pandas>=0.21.0',
+        'numpy>=1.0.0',
+        'matplotlib>=2.0.0'
+    ],
 
-  classifiers=[
-    'Development Status :: 3 - Alpha',
-    'Programming Language :: Python :: 3',
-    'License :: OSI Approved :: MIT License',
-    'Intended Audience :: Developers'
-  ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Developers'
+    ],
 
-  python_requires='>=3.6'
+    python_requires='>=3.6'
 
 )
