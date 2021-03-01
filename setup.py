@@ -32,7 +32,7 @@ setuptools.setup(
 
     name='TAcharts',
 
-    version='0.0.29',
+    version='0.0.30',
 
     author='Carl Farterson',
 
