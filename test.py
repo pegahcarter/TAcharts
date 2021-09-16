@@ -1,4 +1,0 @@
-
-
-def ValidateOHLCV():
-    pass
