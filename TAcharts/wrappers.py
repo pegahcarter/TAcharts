@@ -27,11 +27,13 @@ def pd_series_to_np_array(fn):
     def wrapper(*args, **kwargs):
         if isinstance(args[0], pd.Series):
             oldSeries = args[0].copy()
+            is_oldSeries = oldSeries.any()
         else:
             oldSeries = None
+            is_oldSeries = None
 
         args = tuple(x if type(x) != pd.Series else args[0].to_numpy(na_value=0) for x in args)
-        if oldSeries:
+        if is_oldSeries:
             return pd.Series(data=fn(*args, **kwargs), index=oldSeries.index)
         else:
             return fn(*args, **kwargs)
