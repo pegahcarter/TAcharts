@@ -55,8 +55,8 @@ class Ichimoku:
 
     def _build_lines(self, **kwargs):
         for key, val in kwargs.items():
-            high = sma(self.df["high"], val, "max")
-            low = sma(self.df["low"], val, "min")
+            high = sma(self.df["high"], val)
+            low = sma(self.df["low"], val)
             self.ichimoku[key] = (high + low) / 2
         return
 
