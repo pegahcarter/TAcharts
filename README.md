@@ -1,5 +1,5 @@
 # TAcharts 0.0.30
-### By: Carl Farterson
+### By: Carter Carlson
 ##### Contributors: [@rnarciso](https://github.com/rnarciso), [@t3ch9](https://github.com/t3ch9)
 
 
